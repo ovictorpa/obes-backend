@@ -1,10 +1,13 @@
 const express = require("express");
-const server = express();
+const app = express();
+const door = 3000;
+const bookRoutes = require('../src/routes/booksRoutes')
 
-server.use(express.json());
+app.use(express.json());
+app.use('/api', bookRoutes)
 
 if (process.env.NODE_ENV !== 'test') {
-    server.listen(8080, () => console.log('🔥 Server started at http://localhost:8080'));
+    app.listen(door, () => console.log('📚 Obes API started at http://localhost:3000'));
   }
 
-module.exports = server;
+module.exports = app;
