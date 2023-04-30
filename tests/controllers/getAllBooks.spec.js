@@ -20,4 +20,29 @@ describe('BooksController', () => {
       expect(mockRes.json).toHaveBeenCalledWith(mockRows);
     });
   });
+
+  describe('getBookById', () => {
+    it('should return "Invalid Id" if the book id is not valid', () => {
+      const req = { params: { id: 0 } };
+      const send = jest.fn();
+      const res = { send };
+
+      booksController.getBookById(req, res);
+
+      expect(send).toHaveBeenCalledWith('Invalid Id');
+    });
+
+    it('should return a book by id', () => {
+      const req = { params: { id: '1' } };
+      const json = jest.fn();
+      const status = jest.fn(() => ({ json }));
+      const res = { status };
+
+      booksController.getBookById(req, res);
+
+      expect(status).toHaveBeenCalledWith(200);
+      expect(json).toHaveBeenCalled();
+    });
+  });
+
 });

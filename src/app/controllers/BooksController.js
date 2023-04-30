@@ -23,32 +23,51 @@ class BooksController {
         })
     }
     addBook(req, res) {
-        const {
-            title, author, publisher, isbn, description, image_url
-        } = req.body;
+        const { title, description, image_url,  preco} = req.body;
 
-        pool.query(query.createBook, 
-            [title, author, publisher, isbn, description, image_url], 
-            (error, results) => {
+        if(preco == null){
+            pool.query(query.createBook, [title, description, image_url], (error, results) => {
                 if (error) throw error;
                 res.status(201).send("Book Created Successfully!");          
-        })
+            })
+        }
+        else {
+            pool.query(query.createBookForSale, [title, description, image_url, preco], (error, results) =>{
+                if (error) throw error;
+                res.status(201).send("Book Created Successfully!");
+            })
+        }
     }
     updateBook(req, res) {
         const id = parseInt(req.params.id);
-        const {title} = req.body;
+        const {title, description, image_url, preco} = req.body;
         pool.query(query.getBookById, [id], (error, results) => {
             const invalidId = !results.rows.length;
             if(invalidId) {
                 res.send("Invalid Id")
             }
         })
-
-        pool.query(query.updateBook, [title, id], (error, results) => {
-            if(error) throw error;
-            res.status(200).send("Title Updated Successfully")
-        })
-
+        if(title){
+            pool.query(query.updateBookTitle, [title, id], (error, results) => {
+            })
+        }
+        if(description){
+            pool.query(query.updateBookDescription, [description, id], (error, results) => {
+                if(error) throw error;
+            })
+        }
+        if(image_url){
+            pool.query(query.updateBookImage, [image_url, id], (error, results) => {
+                if(error) throw error;
+            })
+        }
+        if(preco){
+            pool.query(query.updateBookPrice, [preco, id], (error, results) => {
+                if(error) throw error;
+            })
+        }
+        if(title || description || image_url || preco)
+            res.status(200).send("Informations Updated Successfully")
     }
     deleteBook(req, res) {
         const id = parseInt(req.params.id);
