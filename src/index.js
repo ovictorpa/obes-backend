@@ -1,6 +1,10 @@
 const express = require("express");
 const app = express();
 const door = 3000;
+
+require('dotenv').config()
+require('./app/database')
+
 const bookRoutes = require('../src/routes/booksRoutes')
 const userRoute = require('../src/routes/usersRoutes')
 const loginRoutes = require('../src/routes/loginRoutes')

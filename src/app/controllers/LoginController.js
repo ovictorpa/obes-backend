@@ -2,32 +2,42 @@ const pool = require('../../database')
 const query = require('../query/users-query')
 const jwt = require("jsonwebtoken")
 const jwtkey = require('../../../nodemon.json')
+const User = require('../models/User')
 
 class LoginController {
 
-    newLogin(req, res) {
-        const {email, password} = req.body;
-        pool.query(query.getUserByEmail, [email, password], (error, results) => {
-            if(error) {return res.status(500).send({error: error})}
-            if(results.rows.length < 1) { return res.status(401).send({messsage: "Falha na autenticação"});}
-            else {
-                const token = jwt.sign({
-                    id: results.rows[0].id,
-                    email: results.rows[0].email,
-                }, jwtkey.env.JWT_KEY, {
-                    expiresIn: "1h"
-                })
-                const response = {
-                    message: "Usuário Logado",
-                    user : {
-                        email: email,
-                        token: token
-                    }
-                }
-                return res.status(201).send({response: response });
-            }
-        })
+  async newLogin(req, res) {
+    const { email = '', password = '' } = req.body;
+
+
+    if (!email || !password) {
+      return res.status(401).json({
+        errors: ['Credenciais inválidas'],
+      });
     }
+
+
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      return res.status(401).json({
+        errors: ['Usuário não existe'],
+      });
+    }
+
+    if (!(await user.passwordIsValid(password))) {
+      return res.status(401).json({
+        errors: ['Senha inválida'],
+      });
+    }
+
+    const { id } = user;
+    const token = jwt.sign({ id, email }, process.env.TOKEN_SECRET, {
+      expiresIn: process.env.TOKEN_EXPIRATION,
+    });
+
+    return res.status(200).json({ token, user: { name: user.name, id, email } });
+  }
 }
 
 module.exports = new LoginController();
