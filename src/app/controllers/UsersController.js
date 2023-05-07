@@ -1,17 +1,23 @@
 const pool = require('../../database');
+const CommonUser = require('../models/CommonUser');
 const User = require('../models/User');
 const query = require('../query/users-query')
 
 class UsersController {
 
     async getAllUsers(req, res) {
+        
         try {
-            const users = await User.findAll();
+            const users = await User.findAll({
+                attributes: ['name', 'email', 'phone_number'],
+                include: 'common_user',
+            });
 
             return res.json(users);
         } catch (e) {
+            console.log(e)
             return res.status(400).json({
-                errors: e.errors.map((err) => err.message)
+                errors: e
             })
         }
     }
@@ -26,13 +32,30 @@ class UsersController {
 
     }
     async createUser(req, res) {
+        console.log(req.body)
         try {
-            const novoUser = await User.create(req.body);
+            const { name, email, password, phone_number, user_type, cpf, birthdate } = req.body
+
+            const data = {
+                name,
+                email,
+                password,
+                phone_number,
+                user_type,
+                common_user: { cpf, birthdate }
+            }
+
+            const novoUser = await User.create(data, {
+                include: [{
+                    model: CommonUser,
+                    as: 'common_user'
+                }]
+            });
 
             return res.status(201).json(novoUser);
         } catch (e) {
             return res.status(400).json({
-                errors: e.errors.map((err) => err.message)
+                errors: e
             })
         }
     }

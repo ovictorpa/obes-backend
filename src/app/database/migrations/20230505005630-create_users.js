@@ -28,6 +28,10 @@ module.exports = {
       image_filename: {
         type: Sequelize.DataTypes.STRING
       },
+      user_type: {
+        type: Sequelize.DataTypes.STRING,
+        allowNull: false
+      },
       created_at: {
         type: Sequelize.DATE,
         allowNull: false,
