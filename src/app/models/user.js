@@ -2,11 +2,12 @@ const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../database');
 const bcrypt = require('bcrypt');
 const CommonUser = require('./CommonUser');
+const InstitutionalUser = require('./InstitutionalUser');
 
 class User extends Model {
-  passwordIsValid(password) {
-    return bcrypt.compare(password, this.password_hash);
-  } 
+    passwordIsValid(password) {
+        return bcrypt.compare(password, this.password_hash);
+    }
 }
 
 User.init({
@@ -61,23 +62,28 @@ User.init({
         defaultValue: ''
     },
     user_type: {
-      type: DataTypes.STRING,
-      allowNull: false
+        type: DataTypes.STRING,
+        allowNull: false
     },
-}, { 
-  sequelize,
-  modelName: 'user'
+}, {
+    sequelize,
+    modelName: 'user'
 });
 
 User.addHook('beforeSave', async (user) => {
-  if(user.password) {
-    user.password_hash = await bcrypt.hash(user.password, 8);
-  }
+    if (user.password) {
+        user.password_hash = await bcrypt.hash(user.password, 8);
+    }
 })
 
 User.hasOne(CommonUser, {
-  as: 'common_user',
-  foreignKey: 'user_id'
+    as: 'common_user',
+    foreignKey: 'user_id'
+})
+
+User.hasOne(InstitutionalUser, {
+    as: 'institutional_user',
+    foreignKey: 'user_id'
 })
 
 module.exports = User;

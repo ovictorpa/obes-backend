@@ -1,5 +1,6 @@
 const pool = require('../../database');
 const CommonUser = require('../models/CommonUser');
+const InstitutionalUser = require('../models/InstitutionalUser');
 const User = require('../models/User');
 const query = require('../query/users-query')
 
@@ -9,8 +10,10 @@ class UsersController {
         
         try {
             const users = await User.findAll({
-                attributes: ['name', 'email', 'phone_number'],
-                include: 'common_user',
+                include: [
+                    {model: InstitutionalUser, as: 'institutional_user'},
+                    {model: CommonUser, as: 'common_user'},
+                ]
             });
 
             return res.json(users);
@@ -32,9 +35,8 @@ class UsersController {
 
     }
     async createUser(req, res) {
-        console.log(req.body)
         try {
-            const { name, email, password, phone_number, user_type, cpf, birthdate } = req.body
+            const { name, email, password, phone_number, user_type, cpf, birthdate, institution_type } = req.body
 
             const data = {
                 name,
@@ -42,17 +44,28 @@ class UsersController {
                 password,
                 phone_number,
                 user_type,
-                common_user: { cpf, birthdate }
             }
 
-            const novoUser = await User.create(data, {
-                include: [{
+            const options = {};
+
+            if(user_type === 'common') {
+                data.common_user = { cpf, birthdate }
+                options.include = [{
                     model: CommonUser,
                     as: 'common_user'
                 }]
-            });
+            }
+            if(user_type === 'institutional') {
+                data.institutional_user = { institution_type }
+                options.include = [{
+                    model: InstitutionalUser,
+                    as: 'institutional_user'
+                }]
+            }
 
-            return res.status(201).json(novoUser);
+            const newUser = await User.create(data, options);
+
+            return res.status(201).json(newUser);
         } catch (e) {
             return res.status(400).json({
                 errors: e
