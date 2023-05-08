@@ -1,107 +1,92 @@
-const pool = require('../../database')
+const pool = require('../../database');
+const Book = require('../models/Book');
 const query = require('../query/books-query')
 
 class BooksController {
 
-    getAllBooks(req, res) {
-        pool.query(query.getBooks, (error, results) => {
-            if(error) {return res.status(500).send({error: error})}
-            res.status(200).json(results.rows);
-        })
+    async getAllBooks(req, res) {
+        try {
+            const books  = await Book.findAll();
+            res.json(books);
+        } catch(e) {
+            return res.status(400).json({
+                erors: e.errors.map((err) => err.message),
+            });
+        }
     }
-    getBookById(req, res) {
-        const id = parseInt(req.params.id);
-        pool.query(query.getBookById, [id], (error, results) => {
-            if(error) {return res.status(500).send({error: error})}
-            if (results.rows.length < 1) { return res.status(404).send({messsage: "Livro não encontrado"});}
-            res.status(200).json(results.rows);
-        })
-    }
-    addBook(req, res) {
-        const { title, description, image_url,  preco} = req.body;
+    
+    async getBookById(req, res) {
+        try {
+            const { id } = req.params
 
-        if(preco == null){
-            pool.query(query.createBook, [title, description, image_url], (error, results) => {
-                if(error) {return res.status(500).send({error: error})}
-                const response = {
-                    message: "Livro cadastrado para doação",
-                    bookInfo: {
-                        title: title,
-                        description: description,
-                        image_url: image_url
-                    },
-                }
-                res.status(201).send({response: response });        
-            })
-        }
-        else {
-            pool.query(query.createBookForSale, [title, description, image_url, preco], (error, results) =>{
-                if(error) {return res.status(500).send({error: error})}
-                const response = {
-                    message: "Livro cadastrado para venda",
-                    bookInfo: {
-                        title: title,
-                        description: description,
-                        image_url: image_url,
-                        price: preco
-                    },
-                }
-                res.status(201).send({response: response });              
-            })
+            const book = await Book.findByPk(parseInt(id))
+
+            if(book === null) {
+                return res.status(400).json({ message: `Book not found`})
+            }
+            return res.status(200).json(book)
+        } catch(e) {
+            return res.status(400).json({
+                erors: e.errors.map((err) => err.message),
+            });
         }
     }
-    updateBook(req, res) {
-        const id = parseInt(req.params.id);
-        const {title, description, image_url, preco} = req.body;
-        pool.query(query.getBookById, [id], (error, results) => {
-            if (results.rows.length < 1) { return res.status(404).send({messsage: "Livro não encontrado"});}
-        })
-        if(title){
-            pool.query(query.updateBookTitle, [title, id], (error, results) => {
-                if(error) {return res.status(500).send({error: error})}
-            })
-        }
-        if(description){
-            pool.query(query.updateBookDescription, [description, id], (error, results) => {
-                if(error) {return res.status(500).send({error: error})}
-            })
-        }
-        if(image_url){
-            pool.query(query.updateBookImage, [image_url, id], (error, results) => {
-                if(error) {return res.status(500).send({error: error})}
-            })
-        }
-        if(preco){
-            pool.query(query.updateBookPrice, [preco, id], (error, results) => {
-                if(error) {return res.status(500).send({error: error})}
-            })
-        }
-        if(title || description || image_url || preco){
-            const response = {
-                message: "Informações atualizadas",
-                bookInfo: {
-                    title: title,
-                    description: description,
-                    image_url: image_url,
-                    price: preco
-                },
-            }
-            res.status(200).send({response: response });
+
+    async addBook(req, res) {
+        try {
+            const filename = req.file?.filename;
+
+            const book = await Book.create({...req.body, filename});
+    
+            return res.send(book)
+        } catch(e) {
+            return res.status(400).json({
+                erors: e.errors.map((err) => err.message),
+            });
         }
     }
-    deleteBook(req, res) {
-        const id = parseInt(req.params.id);
-        pool.query(query.deleteBook, [id], (error, results) => {
-            const invalidId = !results.rows.length;
-            if(invalidId) {
-                res.send("Invalid Id")
+
+    async updateBook(req, res) {
+        try {
+            const { id } = req.params;
+
+            const book = await Book.findByPk(parseInt(id));
+
+            if (!book) {
+                return res.status(400).json({
+                    errors: ['Book not found'],
+                });
             }
-        })
-        pool.query(query.deleteBook, [id], (error, results) => {
-            if(error) {return res.status(500).send({error: error})}
-            if (results.rows.length < 1) { return res.status(404).send({messsage: "Livro não encontrado"});}
-            res.status(200).send("Book Deleted Successfully!");
-        })
+
+            await book.update(req.body);
+
+            return res.json({ message: 'Informations Updated Successfully', book });
+        } catch (e) {
+            return res.status(400).json({
+                erors: e.errors.map((err) => err.message),
+            });
+        }
+    }
+
+    async deleteBook(req, res) {
+        try {
+            const { id } = req.params;
+            const book = await Book.findByPk(parseInt(id));
+
+            if (!book) {
+                return res.status(400).json({
+                    errors: ['Book not found'],
+                }); 
+            }
+
+            await book.destroy();
+
+            return res.json({ message: 'Book Deleted Successfully!' });
+        } catch (e) {
+            return res.status(400).json({
+                errors: e.errors.map((err) => err.message),
+            });
+        }
     }
 }
 

@@ -28,7 +28,6 @@ CommonUser.init({
 
 
 CommonUser.addHook('beforeSave', async (user) => {
-    console.log(user.birthdate)
     user.birthdate = new Date(user.birthdate).toDateString()
 })
 
