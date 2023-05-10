@@ -4,18 +4,18 @@ const User = require("../app/models/User")
 
 module.exports = async (req, res, next) => {
 
+
+    const { authorization } = req.headers;
+
+    if (!authorization) {
+        return res.status(401).json({
+            message: 'Login Required'
+        })
+    }
+
+    const [, token] = authorization.split(' ')
+
     try {
-        const { authorization } = req.headers;
-
-        if (!authorization) {
-            return res.json(401).json({
-                errors: ['Login Required']
-            })
-        }
-
-        const [, token] = authorization.split(' ')
-
-
         const decode = jwt.verify(token, process.env.TOKEN_SECRET);
 
         const { id, email } = decode
@@ -28,8 +28,8 @@ module.exports = async (req, res, next) => {
         });
 
         if (!user) {
-            return response.status(401).json({
-                errors: ['Invalid User'],
+            return res.status(401).json({
+                message: 'Invalid User',
             });
         }
 
@@ -39,6 +39,6 @@ module.exports = async (req, res, next) => {
 
 
     } catch (error) {
-        return res.status(401).send({ message: "Unauthorized" })
+        return res.status(401).json({ message: "Unauthorized" })
     }
 }
