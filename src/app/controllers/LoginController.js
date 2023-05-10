@@ -1,7 +1,4 @@
-const pool = require('../../database')
-const query = require('../query/users-query')
 const jwt = require("jsonwebtoken")
-const jwtkey = require('../../../nodemon.json')
 const User = require('../models/User')
 
 class LoginController {

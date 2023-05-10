@@ -1,6 +1,4 @@
-const pool = require('../../database');
 const Book = require('../models/Book');
-const query = require('../query/books-query')
 
 class BooksController {
 

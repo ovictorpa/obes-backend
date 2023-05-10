@@ -1,8 +1,6 @@
-const pool = require('../../database');
 const CommonUser = require('../models/CommonUser');
 const InstitutionalUser = require('../models/InstitutionalUser');
 const User = require('../models/User');
-const query = require('../query/users-query')
 
 class UsersController {
 
