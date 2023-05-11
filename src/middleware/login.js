@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken')
-const jwtkey = require('../../nodemon.json')
 const User = require("../app/models/User")
 
 module.exports = async (req, res, next) => {
