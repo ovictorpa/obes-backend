@@ -1,5 +1,6 @@
+/* eslint-disable no-undef */
 const booksController = require('../../src/app/controllers/BooksController');
-const pool = require('../../src/database')
+const pool = require('../../src/database');
 
 jest.mock('../../src/database');
 
