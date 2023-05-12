@@ -1,14 +1,24 @@
 const Book = require('../models/Book');
+const { Op } = require('sequelize');
 
 class BooksController {
 
   async getAllBooks(req, res) {
     try {
-      const books = await Book.findAll();
+      const title = req.query.title || '';
+
+      const books = await Book.findAll({
+        where: {
+          title: {
+            [Op.like]: `%${title}%`
+          }
+        }
+      });
+
       res.json(books);
     } catch (e) {
       return res.status(400).json({
-        erors: e.errors.map((err) => err.message),
+        e
       });
     }
   }
