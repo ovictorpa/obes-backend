@@ -1,6 +1,7 @@
 const CommonUser = require('../models/CommonUser');
 const InstitutionalUser = require('../models/InstitutionalUser');
 const User = require('../models/User');
+const UsersService = require('../services/UsersService');
 
 class UsersController {
 
@@ -31,44 +32,27 @@ class UsersController {
     }
 
   }
-  async createUser(req, res) {
-    try {
-      const { name, email, password, phone_number, user_type, cpf, birthdate, institution_type } = req.body;
 
-      const data = {
-        name,
+  async createUser(request, response) {
+    const { name, email, password, phone_number, user_type, cpf, birthdate, institution_type } = request.body;
+
+    const service = new UsersService();
+
+    const user = await service.createUser(
+      { name,
         email,
         password,
         phone_number,
         user_type,
-      };
-
-      const options = {};
-
-      if (user_type === 'common') {
-        data.common_user = { cpf, birthdate };
-        options.include = [{
-          model: CommonUser,
-          as: 'common_user'
-        }];
+        cpf,
+        birthdate,
+        institution_type
       }
-      if (user_type === 'institutional') {
-        data.institutional_user = { institution_type };
-        options.include = [{
-          model: InstitutionalUser,
-          as: 'institutional_user'
-        }];
-      }
+    );
 
-      const newUser = await User.create(data, options);
-
-      return res.status(201).json(newUser);
-    } catch (e) {
-      return res.status(400).json({
-        errors: e
-      });
-    }
+    return response.status(201).json(user);
   }
+
   async updateUser(req, res) {
     try {
       const user = await User.findByPk(req.user.id);

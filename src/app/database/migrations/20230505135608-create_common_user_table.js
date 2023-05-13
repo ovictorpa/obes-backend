@@ -11,7 +11,8 @@ module.exports = {
       },
       cpf: {
         type: Sequelize.DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
       birthdate: {
         type: Sequelize.DataTypes.DATEONLY

@@ -49,13 +49,7 @@ User.init({
   },
   phone_number: {
     type: DataTypes.STRING,
-    defaultValue: '',
-    validate: {
-      len: {
-        args: [8, 255],
-        msg: 'número de telefone inválido'
-      }
-    }
+    defaultValue: ''
   },
   image_filename: {
     type: DataTypes.STRING,

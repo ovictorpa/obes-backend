@@ -23,7 +23,8 @@ module.exports = {
         allowNull: false,
       },
       phone_number: {
-        type: Sequelize.DataTypes.STRING
+        type: Sequelize.DataTypes.STRING,
+        allowNull: true
       },
       image_filename: {
         type: Sequelize.DataTypes.STRING

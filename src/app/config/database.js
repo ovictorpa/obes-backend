@@ -1,4 +1,6 @@
-require('dotenv').config();
+require('dotenv').config({
+  path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env'
+});
 
 module.exports = {
   username: process.env.DB_USER,
@@ -6,7 +8,8 @@ module.exports = {
   database: process.env.DB_DATABASE,
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
-  dialect: 'postgres',
+  dialect: process.env.DB_DIALECT || 'postgres',
+  storage: './tests/database.sqlite',
   define: {
     timestamps: true,
     underscored: true,

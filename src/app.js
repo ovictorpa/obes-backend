@@ -1,3 +1,4 @@
+require('express-async-errors');
 const path = require('path');
 const express = require('express');
 const helmet = require('helmet');
@@ -22,12 +23,29 @@ const corsOptions = {
   },
 };
 
+// eslint-disable-next-line no-unused-vars
+const errorHandling = (err, request, response, next) => {
+  if (err instanceof Error) {
+    return response.status(err.statusCode).json({
+      message: err.message,
+      errors: err.errors
+    });
+  }
+
+  return response.status(500).json({
+    status: 'error',
+    message: 'Internal Server Error'
+  });
+};
+
 
 class App {
   constructor() {
     this.app = express();
     this.middlewares();
     this.routes();
+
+    this.app.use(errorHandling);
   }
 
   middlewares() {
