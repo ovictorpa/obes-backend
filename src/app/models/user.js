@@ -1,8 +1,7 @@
 const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../database');
 const bcrypt = require('bcrypt');
-const CommonUser = require('./CommonUser');
-const InstitutionalUser = require('./InstitutionalUser');
+const UserType = require('./enums/UserType');
 
 class User extends Model {
   passwordIsValid(password) {
@@ -49,15 +48,38 @@ User.init({
   },
   phone_number: {
     type: DataTypes.STRING,
-    defaultValue: ''
+    defaultValue: null
   },
   image_filename: {
     type: DataTypes.STRING,
     defaultValue: ''
   },
   user_type: {
-    type: DataTypes.STRING,
+    type: DataTypes.ENUM(UserType.Common, UserType.Institutional),
     allowNull: false
+  },
+  cpf: {
+    type: DataTypes.STRING,
+    defaultValue: null,
+    validate: {
+      len: {
+        args: [14, 14],
+        msg: ['Campo CPF inválido']
+      }
+    }
+  },
+  birthday: {
+    type: DataTypes.DATE,
+    defaultValue: null,
+    validate: {
+      isDate: {
+        msg: 'Data inválida'
+      }
+    }
+  },
+  institution_type: {
+    type: DataTypes.STRING,
+    defaultValue: '',
   },
 }, {
   sequelize,
@@ -70,14 +92,6 @@ User.addHook('beforeSave', async (user) => {
   }
 });
 
-User.hasOne(CommonUser, {
-  as: 'common_user',
-  foreignKey: 'user_id'
-});
 
-User.hasOne(InstitutionalUser, {
-  as: 'institutional_user',
-  foreignKey: 'user_id'
-});
 
 module.exports = User;

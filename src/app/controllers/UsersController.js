@@ -1,5 +1,3 @@
-const CommonUser = require('../models/CommonUser');
-const InstitutionalUser = require('../models/InstitutionalUser');
 const User = require('../models/User');
 const UsersService = require('../services/UsersService');
 
@@ -8,12 +6,7 @@ class UsersController {
   async getAllUsers(req, res) {
 
     try {
-      const users = await User.findAll({
-        include: [
-          { model: InstitutionalUser, as: 'institutional_user' },
-          { model: CommonUser, as: 'common_user' },
-        ]
-      });
+      const users = await User.findAll();
 
       return res.json(users);
     } catch (e) {
@@ -34,7 +27,7 @@ class UsersController {
   }
 
   async createUser(request, response) {
-    const { name, email, password, phone_number, user_type, cpf, birthdate, institution_type } = request.body;
+    const { name, email, password, phone_number, user_type, cpf, birthday, institution_type } = request.body;
 
     const service = new UsersService();
 
@@ -45,7 +38,7 @@ class UsersController {
         phone_number,
         user_type,
         cpf,
-        birthdate,
+        birthday,
         institution_type
       }
     );

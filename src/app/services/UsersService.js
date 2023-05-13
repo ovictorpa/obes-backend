@@ -1,3 +1,4 @@
+const UserType = require('../models/enums/UserType');
 const UserRepository = require('../repositories/UserRepository');
 const BadRequest = require('./errors/BadRequest');
 
@@ -6,7 +7,11 @@ class UsersService {
     this.repository = new UserRepository();
   }
 
-  async createUser({ name, email, password, phone_number, user_type, cpf, birthdate, institution_type }) {
+  async createUser({ name, email, password, phone_number, user_type, cpf, birthday, institution_type }) {
+    if(user_type !== UserType.Common && user_type !== UserType.Institutional) {
+      throw new BadRequest('Invalid User type');
+    }
+
     const userAlreadyExists = await this.repository.findOne({ email });
 
     if (userAlreadyExists) {
@@ -20,7 +25,7 @@ class UsersService {
       phone_number,
       user_type,
       cpf,
-      birthdate,
+      birthday,
       institution_type
     });
 

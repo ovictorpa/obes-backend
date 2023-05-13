@@ -33,6 +33,17 @@ module.exports = {
         type: Sequelize.DataTypes.STRING,
         allowNull: false
       },
+      cpf: {
+        type: Sequelize.DataTypes.STRING,
+        unique: true
+      },
+      birthday: {
+        type: Sequelize.DataTypes.DATEONLY
+      },
+      institution_type: {
+        type: Sequelize.DataTypes.STRING,
+        allowNull: false
+      },
       created_at: {
         type: Sequelize.DATE,
         allowNull: false,
