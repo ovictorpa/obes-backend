@@ -121,4 +121,54 @@ describe('UserController', () => {
     }
   });
 
+  it('deve encontrar um usuário pelo id', async () => {
+    const req = mockRequest();
+    const res = mockResponse();
+
+    req.body = {
+      name: chance.name(),
+      email: chance.email(),
+      password: chance.string({ length: 8}),
+      phone_number: chance.phone({ formatted: false }),
+      user_type: 'common',
+      cpf: chance.cpf(),
+      birthday: chance.birthday(),
+    };
+
+    await UsersController.createUser(req, res);
+
+    req.params = {
+      id: res.json.mock.lastCall[0].dataValues.id
+    };
+
+    req.body = {};
+
+    await UsersController.getUserById(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).not.toHaveBeenCalledWith(null);
+
+  });
+
+  it('deve retornar um erro por não encontrar usuário pelo id', async () => {
+    const req = mockRequest();
+    const res = mockResponse();
+
+    req.params = {
+      id: 1
+    };
+
+    let err;
+    try {
+      await UsersController.getUserById(req, res);
+
+    }catch (e) {
+      err = e;
+    } finally {
+      expect(err).toBeInstanceOf(Error);
+      expect(err.statusCode).toBe(404);
+    }
+
+  });
+
 });

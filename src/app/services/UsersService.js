@@ -1,6 +1,7 @@
 const UserType = require('../models/enums/UserType');
 const UserRepository = require('../repositories/UserRepository');
 const BadRequest = require('./errors/BadRequest');
+const NotFound = require('./errors/NotFound');
 
 class UsersService {
   constructor() {
@@ -31,6 +32,17 @@ class UsersService {
 
     return user;
   }
+
+  async findById(id){
+    const user = await this.repository.findById(id);
+
+    if(!user) {
+      throw new NotFound('User not found');
+    }
+
+    return user;
+  }
 }
+
 
 module.exports = UsersService;

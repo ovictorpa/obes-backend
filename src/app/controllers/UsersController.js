@@ -15,14 +15,15 @@ class UsersController {
       });
     }
   }
-  async getUserById(req, res) {
-    try {
-      const user = await User.findByPk(parseInt(req.params.id));
 
-      return res.json(user || {});
-    } catch (e) {
-      return res.status(400).json({});
-    }
+  async getUserById(req, res) {
+    const { id } = req.params;
+
+    const service = new UsersService();
+
+    const user = await service.findById(id);
+
+    return res.status(200).json(user);
 
   }
 
