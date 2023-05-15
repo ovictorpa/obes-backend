@@ -42,6 +42,20 @@ class UsersService {
 
     return user;
   }
+
+  async update(data) {
+    const user = await this.repository.findById(data.id);
+
+    if(!user) {
+      throw new NotFound('User Not Found');
+    }
+
+    user.set(data);
+
+    const userUpdated = await this.repository.update(user);
+
+    return userUpdated;
+  }
 }
 
 

@@ -16,7 +16,7 @@ describe('UserController', () => {
     req.body = {
       name: chance.name(),
       email: chance.email(),
-      password: chance.string({ length: 8}),
+      password: chance.string({ length: 8 }),
       phone_number: chance.phone({ formatted: false }),
       user_type: 'common',
       cpf: chance.cpf(),
@@ -36,7 +36,7 @@ describe('UserController', () => {
     req.body = {
       name: chance.name(),
       email: chance.email(),
-      password: chance.string({ length: 8}),
+      password: chance.string({ length: 8 }),
       phone_number: chance.phone({ formatted: false }),
       user_type: 'institutional',
       institution_type: 'escola'
@@ -54,7 +54,7 @@ describe('UserController', () => {
     req.body = {
       name: chance.name(),
       email: chance.email(),
-      password: chance.string({ length: 8}),
+      password: chance.string({ length: 8 }),
       phone_number: chance.phone({ formatted: false }),
     };
     const res = mockResponse();
@@ -62,7 +62,7 @@ describe('UserController', () => {
     let err;
     try {
       await UsersController.createUser(req, res);
-    } catch(e) {
+    } catch (e) {
       err = e;
     } finally {
       expect(err).toBeInstanceOf(Error);
@@ -75,7 +75,7 @@ describe('UserController', () => {
     req.body = {
       name: chance.name(),
       email: chance.email(),
-      password: chance.string({ length: 8}),
+      password: chance.string({ length: 8 }),
       phone_number: chance.phone({ formatted: false }),
       user_type: 'teste'
     };
@@ -84,7 +84,7 @@ describe('UserController', () => {
     let err;
     try {
       await UsersController.createUser(req, res);
-    } catch(e) {
+    } catch (e) {
       err = e;
     } finally {
       expect(err).toBeInstanceOf(Error);
@@ -99,7 +99,7 @@ describe('UserController', () => {
     req.body = {
       name: chance.name(),
       email: chance.email(),
-      password: chance.string({ length: 8}),
+      password: chance.string({ length: 8 }),
       phone_number: chance.phone({ formatted: false }),
       user_type: 'institutional',
       cpf: chance.cpf(),
@@ -128,7 +128,7 @@ describe('UserController', () => {
     req.body = {
       name: chance.name(),
       email: chance.email(),
-      password: chance.string({ length: 8}),
+      password: chance.string({ length: 8 }),
       phone_number: chance.phone({ formatted: false }),
       user_type: 'common',
       cpf: chance.cpf(),
@@ -162,13 +162,87 @@ describe('UserController', () => {
     try {
       await UsersController.getUserById(req, res);
 
-    }catch (e) {
+    } catch (e) {
       err = e;
     } finally {
       expect(err).toBeInstanceOf(Error);
       expect(err.statusCode).toBe(404);
     }
 
+  });
+
+  it('deve atualizar um usuário já logado', async () => {
+    const req = mockRequest();
+    const res = mockResponse();
+
+    req.body = {
+      name: chance.name(),
+      email: chance.email(),
+      password: chance.string({ length: 8 }),
+      phone_number: chance.phone({ formatted: false }),
+      user_type: 'common',
+      cpf: chance.cpf(),
+      birthday: chance.birthday(),
+    };
+
+    await UsersController.createUser(req, res);
+
+    const user = res.json.mock.lastCall[0].dataValues;
+
+    req.user = {
+      id: user.id,
+      name: user.name,
+      email: user.email
+    };
+
+    req.body = {
+      name: chance.name(),
+      email: chance.email(),
+      birthday: chance.birthday()
+    };
+
+    await UsersController.updateUser(req, res);
+
+    console.log(user);
+    console.log(res.json.mock.lastCall[0].user.dataValues);
+
+
+
+    expect(res.status).toHaveBeenCalledWith(200);
+  });
+
+  it('deve retornar um erro com o id inválido', async () => {
+    const req = mockRequest();
+    const res = mockResponse();
+
+    req.body = {
+      name: chance.name(),
+      email: chance.email(),
+      password: chance.string({ length: 8 }),
+      phone_number: chance.phone({ formatted: false }),
+      user_type: 'common',
+      cpf: chance.cpf(),
+      birthday: chance.birthday(),
+    };
+
+    await UsersController.createUser(req, res);
+
+    req.body = {
+      name: chance.name(),
+      email: chance.email(),
+      birthday: chance.birthday()
+    };
+
+    let err;
+    try {
+      await UsersController.updateUser(req, res);
+
+    } catch (e) {
+      err = e;
+    } finally {
+      expect(err).toBeInstanceOf(Error);
+      expect(err.statusCode).toBe(404);
+    }
   });
 
 });

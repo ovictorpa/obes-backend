@@ -24,6 +24,12 @@ class UserRepository {
 
     return user;
   }
+
+  async update(user) {
+    const userUpdated = await user.save();
+
+    return userUpdated;
+  }
 }
 
 module.exports = UserRepository;

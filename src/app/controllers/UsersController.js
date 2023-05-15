@@ -48,27 +48,15 @@ class UsersController {
   }
 
   async updateUser(req, res) {
-    try {
-      const user = await User.findByPk(req.user.id);
+    const { id } = req.user;
 
-      if (!user) {
-        return res.status(400).json({
-          errors: ['Usuário não existe'],
-        });
-      }
+    const service = new UsersService();
 
-      const novosDados = await user.update(req.body);
+    const userUpdated = await service.update({ id, ...req.body});
 
-      const { id, name, email } = novosDados;
-
-      return res.json({ message: 'Informations Updated Successfully', user: { id, name, email } });
-    } catch (e) {
-      return res.status(400).json({
-        erors: e.errors.map((err) => err.message),
-      });
-    }
-
+    return res.status(200).json({ message: 'Informations Updated Successfully', user: userUpdated });
   }
+
   async deleteUser(req, res) {
     try {
       const user = await User.findByPk(req.user.id);
