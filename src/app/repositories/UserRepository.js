@@ -30,6 +30,12 @@ class UserRepository {
 
     return userUpdated;
   }
+
+  async destroy(user) {
+    await user.destroy();
+
+    return true;
+  }
 }
 
 module.exports = UserRepository;

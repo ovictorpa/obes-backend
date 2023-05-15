@@ -203,11 +203,6 @@ describe('UserController', () => {
 
     await UsersController.updateUser(req, res);
 
-    console.log(user);
-    console.log(res.json.mock.lastCall[0].user.dataValues);
-
-
-
     expect(res.status).toHaveBeenCalledWith(200);
   });
 
@@ -243,6 +238,57 @@ describe('UserController', () => {
       expect(err).toBeInstanceOf(Error);
       expect(err.statusCode).toBe(404);
     }
+  });
+
+  it('deve remover um usuário já logado', async () => {
+    const req = mockRequest();
+    const res = mockResponse();
+
+    req.body = {
+      name: chance.name(),
+      email: chance.email(),
+      password: chance.string({ length: 8 }),
+      phone_number: chance.phone({ formatted: false }),
+      user_type: 'common',
+      cpf: chance.cpf(),
+      birthday: chance.birthday(),
+    };
+
+    await UsersController.createUser(req, res);
+
+    const user = res.json.mock.lastCall[0].dataValues;
+
+    req.user = {
+      id: user.id,
+      name: user.name,
+      email: user.email
+    };
+
+    await UsersController.deleteUser(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+  });
+
+  it('deve retornar um erro porque o usuário não foi encontrado pelo id', async () => {
+    const req = mockRequest();
+    const res = mockResponse();
+
+
+    req.user = {
+      id: 1
+    };
+
+    let err;
+    try {
+      await UsersController.deleteUser(req, res);
+
+    } catch (e) {
+      err = e;
+    } finally {
+      expect(err).toBeInstanceOf(Error);
+      expect(err.statusCode).toBe(404);
+    }
+
   });
 
 });

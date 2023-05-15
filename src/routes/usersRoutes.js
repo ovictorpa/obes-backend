@@ -4,7 +4,6 @@ const login = require('../middleware/login');
 
 const userRouter = Router();
 
-userRouter.get('/user', UsersController.getAllUsers);
 userRouter.get('/user/:id', login, UsersController.getUserById);
 userRouter.post('/user', UsersController.createUser);
 userRouter.delete('/user/', login, UsersController.deleteUser);

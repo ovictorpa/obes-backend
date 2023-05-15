@@ -9,7 +9,7 @@ class UsersService {
   }
 
   async createUser({ name, email, password, phone_number, user_type, cpf, birthday, institution_type }) {
-    if(user_type !== UserType.Common && user_type !== UserType.Institutional) {
+    if (user_type !== UserType.Common && user_type !== UserType.Institutional) {
       throw new BadRequest('Invalid User type');
     }
 
@@ -33,10 +33,10 @@ class UsersService {
     return user;
   }
 
-  async findById(id){
+  async findById(id) {
     const user = await this.repository.findById(id);
 
-    if(!user) {
+    if (!user) {
       throw new NotFound('User not found');
     }
 
@@ -46,7 +46,7 @@ class UsersService {
   async update(data) {
     const user = await this.repository.findById(data.id);
 
-    if(!user) {
+    if (!user) {
       throw new NotFound('User Not Found');
     }
 
@@ -55,6 +55,18 @@ class UsersService {
     const userUpdated = await this.repository.update(user);
 
     return userUpdated;
+  }
+
+  async deleteById(id) {
+    const user = await this.repository.findById(id);
+
+    if (!user) {
+      throw new NotFound('User Not Found');
+    }
+
+    await this.repository.destroy(user);
+
+    return true;
   }
 }
 
