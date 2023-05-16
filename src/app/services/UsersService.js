@@ -33,6 +33,16 @@ class UsersService {
     return user;
   }
 
+  async findBy(field) {
+    const user = await this.repository.findOne(field);
+
+    if(!user) {
+      throw new BadRequest('User not found');
+    }
+
+    return user;
+  }
+
   async findById(id) {
     const user = await this.repository.findById(id);
 

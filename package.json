@@ -7,7 +7,7 @@
     "dev": "nodemon src/server.js",
     "json": "json-server --watch db.json --port 3004",
     "pretest": "NODE_ENV=test sequelize db:migrate",
-    "test": "NODE_ENV=test jest",
+    "test": "NODE_ENV=test jest  --verbose --coverage",
     "posttest": "NODE_ENV=test sequelize db:migrate:undo:all"
   },
   "repository": {
