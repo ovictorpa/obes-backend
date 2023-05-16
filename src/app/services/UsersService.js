@@ -37,7 +37,7 @@ class UsersService {
     const user = await this.repository.findOne(field);
 
     if(!user) {
-      throw new BadRequest('User not found');
+      throw new BadRequest('User Not Found');
     }
 
     return user;
@@ -47,7 +47,7 @@ class UsersService {
     const user = await this.repository.findById(id);
 
     if (!user) {
-      throw new NotFound('User not found');
+      throw new NotFound('User Not Found');
     }
 
     return user;
