@@ -1,3 +1,4 @@
+require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const UserRepository = require('../repositories/UserRepository');
 const UsersService = require('./UsersService');
@@ -19,7 +20,7 @@ class LoginService {
     const user = await userService.findBy({ email });
 
     if (!user) {
-      throw new BadRequest('User not found');
+      throw new BadRequest('User Not Found');
     }
 
     if (!(await user.passwordIsValid(password))) {
