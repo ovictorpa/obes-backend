@@ -1,25 +1,41 @@
 const Book = require('../models/Book');
-//const { Op } = require('sequelize');
+const { Op } = require('sequelize');
 const BooksService = require('../services/BooksService');
 
 class BooksController {
 
   async getAllBooks(req, res) {
-    const booksService = new BooksService();
+    // const booksService = new BooksService();
 
-    res.json(await booksService.createBook(req.body));
+    // res.json(await booksService.createBook(req.body));
     try {
-      //   const title = req.query.title || '';
+      //const title = req.query.title || '';
+      const { limit, offset, price_limit, title, order_by } = req.query;
 
-      //   const books = await Book.findAll({
-      //     where: {
-      //       title: {
-      //         [Op.like]: `%${title}%`
-      //       }
-      //     }
-      //   });
+      const whereOptions = {};
 
-      //   res.json(books);
+      if(price_limit) {
+        whereOptions.price = { [Op.lte]: price_limit };
+      }
+
+      if(title) {
+        whereOptions.title = { [Op.iLike]: `%${title}%`};
+      }
+
+      const order = [];
+      if(order_by) {
+        const [field, orderDirection] = order_by.split(',');
+        order.push([field, orderDirection]);
+      }
+
+      const books = await Book.findAll({
+        where: whereOptions,
+        limit,
+        offset,
+        order
+      });
+
+      res.json(books);
     } catch (e) {
       return res.status(400).json({
         e
