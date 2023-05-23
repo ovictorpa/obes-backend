@@ -1,21 +1,25 @@
 const Book = require('../models/Book');
-const { Op } = require('sequelize');
+//const { Op } = require('sequelize');
+const BooksService = require('../services/BooksService');
 
 class BooksController {
 
   async getAllBooks(req, res) {
+    const booksService = new BooksService();
+
+    res.json(await booksService.createBook(req.body));
     try {
-      const title = req.query.title || '';
+      //   const title = req.query.title || '';
 
-      const books = await Book.findAll({
-        where: {
-          title: {
-            [Op.like]: `%${title}%`
-          }
-        }
-      });
+      //   const books = await Book.findAll({
+      //     where: {
+      //       title: {
+      //         [Op.like]: `%${title}%`
+      //       }
+      //     }
+      //   });
 
-      res.json(books);
+      //   res.json(books);
     } catch (e) {
       return res.status(400).json({
         e
@@ -41,17 +45,11 @@ class BooksController {
   }
 
   async addBook(req, res) {
-    try {
-      const filename = req.file?.filename;
+    const filename = req.file?.filename;
+    const booksService = new BooksService();
+    const book = await booksService.createBook({ ...req.body, filename });
 
-      const book = await Book.create({ ...req.body, filename });
-
-      return res.send(book);
-    } catch (e) {
-      return res.status(400).json({
-        erors: e.errors.map((err) => err.message),
-      });
-    }
+    return res.status(201).json(book);
   }
 
   async updateBook(req, res) {
