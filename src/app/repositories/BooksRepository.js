@@ -20,6 +20,17 @@ class BooksRepository {
       throw new BadRequest(e.message);
     }
   }
+
+  async findAll(options) {
+    try {
+      console.log(options);
+      const books = await Book.findAll(options);
+
+      return books;
+    } catch(e) {
+      throw new BadRequest(e.message);
+    }
+  }
 }
 
 module.exports = BooksRepository;
