@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const UserRepository = require('../repositories/UserRepository');
 const UsersService = require('./UsersService');
 const BadRequest = require('./errors/BadRequest');
-const Unauththorized = require('./errors/Unauthorized');
+const Unauthorized = require('./errors/Unauthorized');
 
 class LoginService {
   constructor() {
@@ -13,7 +13,7 @@ class LoginService {
 
   async login(email, password) {
     if (!email || !password) {
-      throw new Unauththorized('Invalid Credentials');
+      throw new Unauthorized('Invalid Credentials');
     }
 
     const userService = new UsersService();
@@ -24,7 +24,7 @@ class LoginService {
     }
 
     if (!(await user.passwordIsValid(password))) {
-      throw new Unauththorized('Invalid Credentials');
+      throw new Unauthorized('Invalid Credentials');
     }
 
     const { id } = user;

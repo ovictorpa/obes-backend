@@ -1,6 +1,7 @@
 const { Op } = require('sequelize');
 const BooksRepository = require('../repositories/BooksRepository');
 const NotFound = require('./errors/NotFound');
+const Unauthorized = require('./errors/Unauthorized');
 
 class BooksService {
   constructor() {
@@ -37,7 +38,7 @@ class BooksService {
     return books;
   }
 
-  async createBook({ title, description, type_book, category, image, price, filename }) {
+  async createBook({ title, description, type_book, category, image, price, filename, user_id }) {
     const book = await this.booksRepository.create({
       title,
       description,
@@ -45,7 +46,8 @@ class BooksService {
       category,
       image,
       price,
-      filename
+      filename,
+      user_id
     });
 
     return book;
@@ -66,6 +68,10 @@ class BooksService {
 
     const book = await this.booksRepository.findById(id);
 
+    if(data.user_id !== book.user_id) {
+      throw new Unauthorized('Unauthorized User');
+    }
+
     if (!book) {
       throw new NotFound('Book Not Found');
     }
@@ -77,11 +83,15 @@ class BooksService {
     return bookUpdated;
   }
 
-  async deleteBookById(id) {
+  async deleteBookById(id, user_id) {
     const book = await this.booksRepository.findById(id);
 
     if (!book) {
       throw new NotFound('Book Not Found');
+    }
+
+    if(user_id !== book.user_id) {
+      throw new Unauthorized('Unauthorized User');
     }
 
     await this.booksRepository.destroy(book);

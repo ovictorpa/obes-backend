@@ -24,18 +24,20 @@ class BooksController {
 
   async addBook(req, res) {
     const filename = req.file?.filename;
+    const { id } = req.user;
     const booksService = new BooksService();
-    const book = await booksService.createBook({ ...req.body, filename });
+    const book = await booksService.createBook({ ...req.body, filename, user_id: id });
 
     return res.status(201).json(book);
   }
 
   async updateBook(req, res) {
     const { id } = req.params;
+    const { id: user_id } = req.user;
 
     const booksService = new BooksService();
 
-    const bookUpdated = await booksService.updateBook({ id, ...req.body });
+    const bookUpdated = await booksService.updateBook({ id, user_id, ...req.body });
 
     return res.status(200).json({
       message: 'Informations Updated Successfully',
@@ -45,10 +47,11 @@ class BooksController {
 
   async deleteBook(req, res) {
     const { id } = req.params;
+    const { id: user_id } = req.user;
 
     const service = new BooksService();
 
-    await service.deleteBookById(id);
+    await service.deleteBookById(id, user_id);
 
     return res.status(200).json({ message: 'Book Deleted Successfully!' });
   }

@@ -33,7 +33,6 @@ module.exports = async (req, res, next) => {
     }
 
     req.user = { id, email };
-
     return next();
 
 
