@@ -1,6 +1,7 @@
 const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../database');
 const User = require('./User');
+const Category = require('./Category');
 
 class Book extends Model {
 
@@ -19,10 +20,6 @@ Book.init({
   },
   description: {
     type: DataTypes.TEXT,
-    allowNull: false
-  },
-  category: {
-    type: DataTypes.STRING,
     allowNull: false
   },
   filename: {
@@ -46,10 +43,14 @@ Book.init({
       return `${process.env.URL}/uploads/images/${this.getDataValue('filename')}`;
     }
   }
-}, { sequelize, tableName: 'books' });
+}, { sequelize, tableName: 'books', modelName: 'book' });
 
 Book.belongsTo(User, {
   foreignKey: 'user_id'
+});
+
+Book.belongsTo(Category, {
+  foreignKey: 'category_id'
 });
 
 module.exports = Book;

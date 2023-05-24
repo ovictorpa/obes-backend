@@ -3,13 +3,13 @@ const BadRequest = require('../services/errors/BadRequest');
 
 class BooksRepository {
 
-  async create({ title, description, type_book, category, image, price, filename, user_id }) {
+  async create({ title, description, type_book, category_id, image, price, filename, user_id }) {
     try {
       const book = await Book.create({
         title,
         description,
         type_book,
-        category,
+        category_id,
         image,
         price,
         filename,

@@ -2,6 +2,7 @@ const { Op } = require('sequelize');
 const BooksRepository = require('../repositories/BooksRepository');
 const NotFound = require('./errors/NotFound');
 const Unauthorized = require('./errors/Unauthorized');
+const Category = require('../models/Category');
 
 class BooksService {
   constructor() {
@@ -30,7 +31,10 @@ class BooksService {
       order,
       offset,
       limit,
-      attributes: { exclude: ['created_at', 'updated_at'] }
+      attributes: { exclude: ['created_at', 'updated_at'] },
+      include: [
+        { model: Category, attributes: ['name']}
+      ]
     };
 
     const books = await this.booksRepository.findAll(options);
@@ -38,12 +42,12 @@ class BooksService {
     return books;
   }
 
-  async createBook({ title, description, type_book, category, image, price, filename, user_id }) {
+  async createBook({ title, description, type_book, category_id, image, price, filename, user_id }) {
     const book = await this.booksRepository.create({
       title,
       description,
       type_book,
-      category,
+      category_id,
       image,
       price,
       filename,

@@ -83,7 +83,8 @@ User.init({
   },
 }, {
   sequelize,
-  modelName: 'user'
+  modelName: 'user',
+  tableName: 'users'
 });
 
 User.addHook('beforeSave', async (user) => {
