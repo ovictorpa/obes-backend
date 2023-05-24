@@ -1,3 +1,4 @@
+const Address = require('../models/Address');
 const User = require('../models/User');
 const BadRequest = require('../services/errors/BadRequest');
 
@@ -6,7 +7,7 @@ class UserRepository {
     try {
       const user = await User.create(data);
       return user;
-    } catch(e) {
+    } catch (e) {
       throw new BadRequest(e.message, e.errors);
     }
 
@@ -20,7 +21,17 @@ class UserRepository {
   }
 
   async findById(id) {
-    const user = await User.findByPk(id);
+    const user = await User.findByPk(id, {
+      include: [
+        {
+          model: Address,
+          attributes: {
+            exclude: ['created_at', 'updated_at', 'user_id']
+          }
+        }
+      ]
+
+    });
 
     return user;
   }

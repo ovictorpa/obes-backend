@@ -40,4 +40,8 @@ Address.belongsTo(User, {
   foreignKey: 'user_id'
 });
 
+User.hasOne(Address, {
+  foreignKey: 'user_id'
+});
+
 module.exports = Address;
