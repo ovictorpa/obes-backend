@@ -14,20 +14,13 @@ class BooksController {
   }
 
   async getBookById(req, res) {
-    try {
-      const { id } = req.params;
+    const { id } = req.params;
 
-      const book = await Book.findByPk(parseInt(id));
+    const booksService = new BooksService();
 
-      if (book === null) {
-        return res.status(400).json({ message: 'Book not found' });
-      }
-      return res.status(200).json(book);
-    } catch (e) {
-      return res.status(400).json({
-        erors: e.errors.map((err) => err.message),
-      });
-    }
+    const book = await booksService.findById(id);
+
+    return res.status(200).json(book);
   }
 
   async addBook(req, res) {

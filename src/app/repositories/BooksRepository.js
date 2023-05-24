@@ -23,11 +23,20 @@ class BooksRepository {
 
   async findAll(options) {
     try {
-      console.log(options);
       const books = await Book.findAll(options);
 
       return books;
     } catch(e) {
+      throw new BadRequest(e.message);
+    }
+  }
+
+  async findById(id) {
+    try {
+      const book = await Book.findByPk(id);
+
+      return book;
+    } catch (e) {
       throw new BadRequest(e.message);
     }
   }

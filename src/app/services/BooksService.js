@@ -1,24 +1,25 @@
 const { Op } = require('sequelize');
 const BooksRepository = require('../repositories/BooksRepository');
+const NotFound = require('./errors/NotFound');
 
 class BooksService {
-  constructor () {
+  constructor() {
     this.booksRepository = new BooksRepository();
   }
 
-  async getAllBooks( limit, offset, price_limit, title, order_by ) {
+  async getAllBooks(limit, offset, price_limit, title, order_by) {
     const where = {};
     const order = [];
 
-    if(price_limit) {
+    if (price_limit) {
       where.price = { [Op.lte]: price_limit };
     }
 
-    if(title) {
-      where.title = { [Op.iLike]: `%${title}%`};
+    if (title) {
+      where.title = { [Op.iLike]: `%${title}%` };
     }
 
-    if(order_by) {
+    if (order_by) {
       const [field, orderDirection] = order_by.split(',');
       order.push([field, orderDirection]);
     }
@@ -28,7 +29,7 @@ class BooksService {
       order,
       offset,
       limit,
-      attributes: { exclude: ['created_at', 'updated_at']}
+      attributes: { exclude: ['created_at', 'updated_at'] }
     };
 
     const books = await this.booksRepository.findAll(options);
@@ -46,6 +47,16 @@ class BooksService {
       price,
       filename
     });
+
+    return book;
+  }
+
+  async findById(id) {
+    const book = await this.booksRepository.findById(id);
+
+    if (!book) {
+      throw new NotFound('Book Not Found');
+    }
 
     return book;
   }
