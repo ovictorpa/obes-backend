@@ -48,6 +48,22 @@ class AddressesService {
 
     return addressUpdated;
   }
+
+  async deleteAddressById(id, user_id) {
+    const address = await this.addressesRepository.findById(id);
+
+    if (!address) {
+      throw new NotFound('Address Not Found');
+    }
+
+    if(user_id !== address.user_id) {
+      throw new Unauthorized('Unauthorized User');
+    }
+
+    await this.addressesRepository.destroy(address);
+
+    return true;
+  }
 }
 
 module.exports = AddressesService;

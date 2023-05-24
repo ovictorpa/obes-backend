@@ -47,6 +47,16 @@ class AddressesRepository {
       throw new BadRequest(e.message, e.errors);
     }
   }
+
+  async destroy(adress) {
+    try {
+      await adress.destroy();
+
+      return true;
+    } catch (e) {
+      throw new BadRequest(e.message, e.errors);
+    }
+  }
 }
 
 module.exports = AddressesRepository;

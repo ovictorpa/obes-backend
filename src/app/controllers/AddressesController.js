@@ -28,7 +28,16 @@ class AddressesController {
     });
   }
 
+  async deleteAddress(req, res) {
+    const { id } = req.params;
+    const { id: user_id } = req.user;
 
+    const service = new AddressesService();
+
+    await service.deleteAddressById(id, user_id);
+
+    return res.status(200).json({ message: 'Address Deleted Successfully!' });
+  }
 }
 
 module.exports = new AddressesController();
