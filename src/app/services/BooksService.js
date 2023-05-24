@@ -3,6 +3,8 @@ const BooksRepository = require('../repositories/BooksRepository');
 const NotFound = require('./errors/NotFound');
 const Unauthorized = require('./errors/Unauthorized');
 const Category = require('../models/Category');
+const TypeBook = require('../models/enums/TypeBook');
+const BadRequest = require('./errors/BadRequest');
 
 class BooksService {
   constructor() {
@@ -47,6 +49,10 @@ class BooksService {
   }
 
   async createBook({ title, description, type_book, category_id, image, price, filename, user_id }) {
+    if (type_book !== TypeBook.Donation && type_book !== TypeBook.Sale) {
+      throw new BadRequest('Invalid Book type');
+    }
+
     const book = await this.booksRepository.create({
       title,
       description,
