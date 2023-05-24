@@ -11,7 +11,7 @@ class BooksService {
     this.booksRepository = new BooksRepository();
   }
 
-  async getAllBooks(limit, offset, price_limit, title, order_by, category_id) {
+  async getAllBooks(limit, offset, price_limit, title, order_by, category_id, type_book) {
     const where = {};
     const order = [];
 
@@ -25,6 +25,10 @@ class BooksService {
 
     if(category_id) {
       where.category_id = { [Op.eq]: category_id};
+    }
+
+    if(type_book === TypeBook.Donation || type_book === TypeBook.Sale) {
+      where.type_book = { [Op.eq]: type_book};
     }
 
     if (order_by) {
