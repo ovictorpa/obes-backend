@@ -1,4 +1,3 @@
-const Book = require('../models/Book');
 const BooksService = require('../services/BooksService');
 
 class BooksController {
@@ -36,32 +35,22 @@ class BooksController {
 
     const booksService = new BooksService();
 
-    const bookUpdated = await booksService.updateBook({id, ...req.body});
+    const bookUpdated = await booksService.updateBook({ id, ...req.body });
 
-    return res.status(200).json({ message: 'Informations Updated Successfully', book: bookUpdated });
-
-
+    return res.status(200).json({
+      message: 'Informations Updated Successfully',
+      book: bookUpdated
+    });
   }
 
   async deleteBook(req, res) {
-    try {
-      const { id } = req.params;
-      const book = await Book.findByPk(parseInt(id));
+    const { id } = req.params;
 
-      if (!book) {
-        return res.status(400).json({
-          errors: ['Book not found'],
-        });
-      }
+    const service = new BooksService();
 
-      await book.destroy();
+    await service.deleteBookById(id);
 
-      return res.json({ message: 'Book Deleted Successfully!' });
-    } catch (e) {
-      return res.status(400).json({
-        errors: e.errors.map((err) => err.message),
-      });
-    }
+    return res.status(200).json({ message: 'Book Deleted Successfully!' });
   }
 }
 

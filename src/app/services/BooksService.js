@@ -77,6 +77,17 @@ class BooksService {
     return bookUpdated;
   }
 
+  async deleteBookById(id) {
+    const book = await this.booksRepository.findById(id);
+
+    if (!book) {
+      throw new NotFound('Book Not Found');
+    }
+
+    await this.booksRepository.destroy(book);
+
+    return true;
+  }
 }
 
 module.exports = BooksService;

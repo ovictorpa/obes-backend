@@ -50,6 +50,16 @@ class BooksRepository {
       throw new BadRequest(e.message);
     }
   }
+
+  async destroy(book) {
+    try {
+      await book.destroy();
+
+      return true;
+    } catch (e) {
+      throw new BadRequest(e.message);
+    }
+  }
 }
 
 module.exports = BooksRepository;
