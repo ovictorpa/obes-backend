@@ -32,25 +32,15 @@ class BooksController {
   }
 
   async updateBook(req, res) {
-    try {
-      const { id } = req.params;
+    const { id } = req.params;
 
-      const book = await Book.findByPk(parseInt(id));
+    const booksService = new BooksService();
 
-      if (!book) {
-        return res.status(400).json({
-          errors: ['Book not found'],
-        });
-      }
+    const bookUpdated = await booksService.updateBook({id, ...req.body});
 
-      await book.update(req.body);
+    return res.status(200).json({ message: 'Informations Updated Successfully', book: bookUpdated });
 
-      return res.json({ message: 'Informations Updated Successfully', book });
-    } catch (e) {
-      return res.status(400).json({
-        erors: e.errors.map((err) => err.message),
-      });
-    }
+
   }
 
   async deleteBook(req, res) {

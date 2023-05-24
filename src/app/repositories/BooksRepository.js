@@ -26,7 +26,7 @@ class BooksRepository {
       const books = await Book.findAll(options);
 
       return books;
-    } catch(e) {
+    } catch (e) {
       throw new BadRequest(e.message);
     }
   }
@@ -36,6 +36,16 @@ class BooksRepository {
       const book = await Book.findByPk(id);
 
       return book;
+    } catch (e) {
+      throw new BadRequest(e.message);
+    }
+  }
+
+  async update(book) {
+    try {
+      const bookUpdated = await book.save();
+
+      return bookUpdated;
     } catch (e) {
       throw new BadRequest(e.message);
     }

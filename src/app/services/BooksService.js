@@ -61,6 +61,22 @@ class BooksService {
     return book;
   }
 
+  async updateBook(data) {
+    const { id } = data;
+
+    const book = await this.booksRepository.findById(id);
+
+    if (!book) {
+      throw new NotFound('Book Not Found');
+    }
+
+    book.set(data);
+
+    const bookUpdated = await this.booksRepository.update(book);
+
+    return bookUpdated;
+  }
+
 }
 
 module.exports = BooksService;
