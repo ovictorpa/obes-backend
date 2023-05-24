@@ -7,6 +7,7 @@ const cors = require('cors');
 const bookRoutes = require('./routes/booksRoutes');
 const userRoute = require('./routes/usersRoutes');
 const loginRoutes = require('./routes/loginRoutes');
+const categoryRouter = require('./routes/categoriesRoutes');
 const apiRoute = '/api';
 
 const whitelist = [
@@ -60,6 +61,7 @@ class App {
     this.app.use(apiRoute, bookRoutes);
     this.app.use(apiRoute, userRoute);
     this.app.use(apiRoute, loginRoutes);
+    this.app.use(apiRoute, categoryRouter);
 
   }
 }
