@@ -9,7 +9,7 @@ class BooksService {
     this.booksRepository = new BooksRepository();
   }
 
-  async getAllBooks(limit, offset, price_limit, title, order_by) {
+  async getAllBooks(limit, offset, price_limit, title, order_by, category_id) {
     const where = {};
     const order = [];
 
@@ -19,6 +19,10 @@ class BooksService {
 
     if (title) {
       where.title = { [Op.iLike]: `%${title}%` };
+    }
+
+    if(category_id) {
+      where.category_id = { [Op.eq]: category_id};
     }
 
     if (order_by) {

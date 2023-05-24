@@ -5,9 +5,16 @@ class BooksController {
   async getAllBooks(req, res) {
     const booksService = new BooksService();
 
-    const { limit, offset, price_limit, title, order_by } = req.query;
+    const { limit, offset, price_limit, title, order_by, category_id } = req.query;
 
-    const books = await booksService.getAllBooks(limit, offset, price_limit, title, order_by);
+    const books = await booksService.getAllBooks(
+      limit,
+      offset,
+      price_limit,
+      title,
+      order_by,
+      category_id
+    );
 
     return res.status(200).json(books);
   }

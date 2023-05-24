@@ -2,9 +2,9 @@ const CategoriesService = require('../services/CategoriesService');
 
 class CategoryController {
   async getAllCategories(req, res){
-    const categoriesService = new CategoriesService();
+    const service = new CategoriesService();
 
-    const categories = await categoriesService.getAllCategories();
+    const categories = await service.getAllCategories();
 
     return res.status(200).json(categories);
   }
@@ -12,9 +12,9 @@ class CategoryController {
   async getCategoryById(req, res) {
     const { id } = req.params;
 
-    const categoriesService = new CategoriesService();
+    const service = new CategoriesService();
 
-    const category = await categoriesService.findById(id);
+    const category = await service.findById(id);
 
     return res.status(200).json(category);
 
