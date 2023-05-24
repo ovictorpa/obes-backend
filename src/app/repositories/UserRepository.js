@@ -6,8 +6,8 @@ class UserRepository {
     try {
       const user = await User.create(data);
       return user;
-    } catch(err) {
-      throw new BadRequest(err.message);
+    } catch(e) {
+      throw new BadRequest(e.message, e.errors);
     }
 
   }
