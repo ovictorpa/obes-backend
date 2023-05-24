@@ -1,4 +1,6 @@
 const AddressesRepository = require('../repositories/AddressesRepository');
+const NotFound = require('./errors/NotFound');
+const Unauthorized = require('./errors/Unauthorized');
 
 class AddressesService {
   constructor() {
@@ -25,6 +27,26 @@ class AddressesService {
       user_id });
 
     return address;
+  }
+
+  async updateAddress(data) {
+    const { id } = data;
+
+    const address = await this.addressesRepository.findById(id);
+
+    if(!address) {
+      throw new NotFound('Address Not Found');
+    }
+
+    if(data.user_id !== address.user_id) {
+      throw new Unauthorized('Unauthorized User');
+    }
+
+    address.set(data);
+
+    const addressUpdated = await this.addressesRepository.update(address);
+
+    return addressUpdated;
   }
 }
 

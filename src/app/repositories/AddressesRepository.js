@@ -27,6 +27,26 @@ class AddressesRepository {
       throw new BadRequest(e.message, e.errors);
     }
   }
+
+  async findById(id) {
+    try {
+      const address = await Address.findByPk(id);
+
+      return address;
+    } catch (e) {
+      throw new BadRequest(e.message, e.errors);
+    }
+  }
+
+  async update(address) {
+    try {
+      const addressUpdated = await address.save();
+
+      return addressUpdated;
+    } catch (e) {
+      throw new BadRequest(e.message, e.errors);
+    }
+  }
 }
 
 module.exports = AddressesRepository;

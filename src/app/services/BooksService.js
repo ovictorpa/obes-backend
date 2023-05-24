@@ -86,12 +86,12 @@ class BooksService {
 
     const book = await this.booksRepository.findById(id);
 
-    if(data.user_id !== book.user_id) {
-      throw new Unauthorized('Unauthorized User');
-    }
-
     if (!book) {
       throw new NotFound('Book Not Found');
+    }
+
+    if(data.user_id !== book.user_id) {
+      throw new Unauthorized('Unauthorized User');
     }
 
     book.set(data);
