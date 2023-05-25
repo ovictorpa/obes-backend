@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "title":"Obes API",
-        "description":"API criada para visualização e manipulação dos endpoints do sistema Obes - Sebo Online",
+        "description":"API created for viewing and manipulating Obes endpoints",
         "termsOfService": "http://swagger.io/terms/",
         "contact":{
             "email": "apiteam@swagger.io"
@@ -10,134 +10,9 @@
         "version": "1.0.0"
     },
     "paths": {
-        "/api/addresses":{
-            "post":{
-                "summary": "Add address",
-                "tags":["Address"],
-                "security":[{ "bearerAuth":[] }],
-                "requestBody":{
-                    "content":{
-                        "application/json":{
-                            "schema": {
-                                "type":"object",
-                                "$ref":"#/components/schemas/Address"
-                            },
-                            "examples":{
-                                "user":{
-                                    "value":{
-                                        "cep": "88066-350",
-                                        "state": "SC",
-                                        "city": "Florianópolis",
-                                        "area": "Armação do Pântano do Sul",
-                                        "address_name": "Servidão Loduvina Pires",
-                                        "number": "123"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses":{
-                    "201":{
-                        "description":"Created"
-                    },
-                    "400":{
-                        "description":"Bad Request"
-                    },
-                    "401":{
-                        "description":"Unauthorized"
-                    },
-                    "500":{
-                        "description":"Internal Server Error"
-                    }
-                }
-            }
-        },
-        "/api/addresses/{addressId}":{
-            "put":{
-                "summary": "Edit address informations",
-                "tags":["Address"],
-                "security":[{ "bearerAuth":[] }],
-                "parameters":[{
-                    "name":"bookId",
-                    "in":"path",
-                    "description":"Book Id",
-                    "required":true,
-                    "type":"number"
-                }],
-                "requestBody":{
-                    "content":{
-                        "application/json":{
-                            "schema": {
-                                "type":"object",
-                                "$ref":"#/components/schemas/Address"
-                            },
-                            "examples":{
-                                "user":{
-                                    "value":{
-                                        "cep": "88066-350",
-                                        "state": "SC",
-                                        "city": "Florianópolis",
-                                        "area": "Armação do Pântano do Sul",
-                                        "address_name": "Servidão Loduvina Pires",
-                                        "number": "123"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses":{
-                    "200": {
-                        "description":"OK"
-                    },
-                    "400":{
-                        "description":"Bad Request"
-                    },
-                    "401":{
-                        "description":"Unauthorized"
-                    },
-                    "404":{
-                        "description":"Not Found"
-                    },
-                    "500":{
-                        "description":"Internal Server Error"
-                    }
-                }
-            },
-            "delete":{
-                "summary": "Delete a adress",
-                "tags":["Address"],
-                "security":[{ "bearerAuth":[] }],
-                "parameters":[{
-                    "name":"bookId",
-                    "in":"path",
-                    "description":"Book Id",
-                    "required":true,
-                    "type":"number"
-                }],
-                "responses":{
-                    "200": {
-                        "description":"OK"
-                    },
-                    "400":{
-                        "description":"Bad Request"
-                    },
-                    "401":{
-                        "description":"Unauthorized"
-                    },
-                    "404":{
-                        "description":"Not Found"
-                    },
-                    "500":{
-                        "description":"Internal Server Error"
-                    }
-                }
-            }
-        },
         "/api/login":{
             "post":{
-                "summary":"Fazer Login",
+                "summary":"Authenticate",
                 "operationId":"login",
                 "tags":["Auth"],
                 "produces":[
@@ -181,10 +56,132 @@
 
             }
         },
+        "/api/addresses":{
+            "post":{
+                "summary": "Add address",
+                "tags":["Address"],
+                "security":[{ "bearerAuth":[] }],
+                "requestBody":{
+                    "content":{
+                        "application/json":{
+                            "schema": {
+                                "type":"object",
+                                "$ref":"#/components/schemas/Address"
+                            },
+                            "examples":{
+                                "user":{
+                                    "value":{
+                                        "cep": "88066-350",
+                                        "state": "SC",
+                                        "city": "Florianópolis",
+                                        "area": "Armação do Pântano do Sul",
+                                        "address_name": "Servidão Loduvina Pires",
+                                        "number": "123"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "201":{
+                        "description":"Created"
+                    },
+                    "400":{
+                        "description":"Bad Request"
+                    },
+                    "401":{
+                        "description":"Unauthorized"
+                    },
+                    "500":{
+                        "description":"Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/address/{addressId}":{
+            "put":{
+                "summary": "Edit address informations",
+                "tags":["Address"],
+                "security":[{ "bearerAuth":[] }],
+                "parameters":[{
+                    "name":"addressId",
+                    "in":"path",
+                    "description":"Address Id",
+                    "required":true,
+                    "type":"number"
+                }],
+                "requestBody":{
+                    "content":{
+                        "application/json":{
+                            "schema": {
+                                "type":"object",
+                                "$ref":"#/components/schemas/Address"
+                            },
+                            "examples":{
+                                "description":"Execute with the information you want to edit",
+                                "user":{
+                                    "value":{
+                                        "state": "SC",
+                                        "city": "New City"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200": {
+                        "description":"OK"
+                    },
+                    "400":{
+                        "description":"Bad Request"
+                    },
+                    "401":{
+                        "description":"Unauthorized"
+                    },
+                    "404":{
+                        "description":"Not Found"
+                    },
+                    "500":{
+                        "description":"Internal Server Error"
+                    }
+                }
+            },
+            "delete":{
+                "summary": "Delete a adress",
+                "tags":["Address"],
+                "security":[{ "bearerAuth":[] }],
+                "parameters":[{
+                    "name":"addressId",
+                    "in":"path",
+                    "description":"Address Id",
+                    "required":true,
+                    "type":"number"
+                }],
+                "responses":{
+                    "200": {
+                        "description":"OK"
+                    },
+                    "400":{
+                        "description":"Bad Request"
+                    },
+                    "401":{
+                        "description":"Unauthorized"
+                    },
+                    "404":{
+                        "description":"Not Found"
+                    },
+                    "500":{
+                        "description":"Internal Server Error"
+                    }
+                }
+            }
+        },
         "/api/books":{
             "get":{
                 "tags":["Book"],
-                "summary":"Visualizar livros",
+                "summary":"Get All Books",
                 "responses":{
                     "200": {
                         "description":"OK"
@@ -199,7 +196,7 @@
             },
             "post":{
                 "tags":["Book"],
-                "summary":"Cadastrar livro",
+                "summary":"Post a new book",
                 "security":[{ "bearerAuth":[] }],
                 "requestBody":{
                     "content":{
@@ -241,8 +238,7 @@
         },
         "/api/books/{bookId}": {
             "get":{
-                "summary":"Buscar pelo Id",
-                "description":"Buscar livro por ID",
+                "summary":"Get book by Id",
                 "operationId":"findBookById",
                 "tags":["Book"],
                 "parameters":[{
@@ -268,8 +264,7 @@
                 }
             },
             "put":{
-                "summary":"Editar informações de livros",
-                "description":"Editar informações de livros",
+                "summary":"Edit book informations",
                 "security":[{ "bearerAuth":[] }],
                 "operationId":"putBook",
                 "tags":["Book"],
@@ -289,7 +284,7 @@
                             },
                             "examples":{
                                 "user":{
-                                    "description":"Envie apenas as informações que deseja editar",
+                                    "description":"Execute with the information you want to edit",
                                     "value":{
                                         "title": "Meu grande livro.... Fábulas",
                                         "description": "New description"
@@ -318,8 +313,7 @@
                 }
             },
             "delete":{
-                "summary":"Deletar Livro",
-                "description":"Deletar Livro",
+                "summary":"Delete book",
                 "security":[{ "bearerAuth":[] }],
                 "operationId":"deleteBook",
                 "tags":["Book"],
@@ -351,7 +345,7 @@
         },
         "/api/categories": {
             "get":{
-                "summary":"Visualizar categorias",
+                "summary":"Get books categories",
                 "responses":{
                     "200": {
                         "description":"OK"
@@ -365,8 +359,7 @@
         },
         "/api/categories/{categoryId}": {
             "get":{
-                "summary":"Buscar pelo Id",
-                "description":"Buscar categoria por ID",
+                "summary":"Get category by Id",
                 "operationId":"findCategoryById",
                 "tags":["Categories"],
                 "parameters":[{
@@ -395,7 +388,7 @@
         "/api/user":{
             "get":{
                 "tags":["User"],
-                "summary":"Visualizar usuários do sistema",
+                "summary":"Get All Users",
                 "responses":{
                     "200":{
                         "description":"OK"
@@ -404,7 +397,7 @@
             },
             "post":{
                 "tags":["User"],
-                "summary":"Cadastrar usuários do sistema",
+                "summary":"Register a new user",
                 "requestBody":{
                     "content":{
                         "application/json":{
@@ -444,7 +437,7 @@
         "/api/user/{userId}":{
             "get":{
                 "tags":["User"],
-                "summary":"Visualizar usuário por Id",
+                "summary":"Get user by ID",
                 "parameters":[{
                     "name":"userId",
                     "in":"path",
@@ -460,7 +453,7 @@
             },
             "put":{
                 "tags":["User"],
-                "summary":"Editar informações de usuário",
+                "summary":"Edit user informations",
                 "security":[{ "bearerAuth":[] }],
                 "parameters":[{
                     "name":"userId",
@@ -478,7 +471,7 @@
                             },
                             "examples":{
                                 "user":{
-                                    "description":"Envie apenas as informações que deseja editar",
+                                    "description":"Execute with the information you want to edit",
                                     "value":{
                                         "email": "newemail@domain.com"
                                     }
@@ -507,7 +500,7 @@
             },
             "delete":{
                 "tags":["User"],
-                "summary":"Deletar usuário",
+                "summary":"Deletae user",
                 "security":[{ "bearerAuth":[] }],
                 "parameters":[{
                     "name":"userId",
