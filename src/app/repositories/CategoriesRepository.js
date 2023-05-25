@@ -12,7 +12,7 @@ class CategoriesRepository {
 
       return categories;
     } catch (e) {
-      throw new BadRequest(e.message);
+      throw new BadRequest(e.message, e.errors);
     }
   }
 
@@ -22,7 +22,7 @@ class CategoriesRepository {
 
       return category;
     } catch (e) {
-      throw new BadRequest(e.message);
+      throw new BadRequest(e.message, e.errors);
     }
   }
 }

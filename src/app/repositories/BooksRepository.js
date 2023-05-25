@@ -18,7 +18,7 @@ class BooksRepository {
 
       return book;
     } catch (e) {
-      throw new BadRequest(e.message);
+      throw new BadRequest(e.message, e.errors);
     }
   }
 
@@ -28,7 +28,7 @@ class BooksRepository {
 
       return books;
     } catch (e) {
-      throw new BadRequest(e.message);
+      throw new BadRequest(e.message, e.errors);
     }
   }
 
@@ -38,7 +38,7 @@ class BooksRepository {
 
       return book;
     } catch (e) {
-      throw new BadRequest(e.message);
+      throw new BadRequest(e.message, e.errors);
     }
   }
 
@@ -48,7 +48,7 @@ class BooksRepository {
 
       return bookUpdated;
     } catch (e) {
-      throw new BadRequest(e.message);
+      throw new BadRequest(e.message, e.errors);
     }
   }
 
@@ -58,7 +58,7 @@ class BooksRepository {
 
       return true;
     } catch (e) {
-      throw new BadRequest(e.message);
+      throw new BadRequest(e.message, e.errors);
     }
   }
 }
