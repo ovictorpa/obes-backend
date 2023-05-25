@@ -10,21 +10,151 @@
         "version": "1.0.0"
     },
     "paths": {
-        "/api/login":{
+        "/api/addresses":{
             "post":{
-                "summary":"Fazer Login",
-                "tags":["Auth"],
+                "summary": "Add address",
+                "tags":["Address"],
+                "security":[{ "bearerAuth":[] }],
                 "requestBody":{
                     "content":{
                         "application/json":{
                             "schema": {
+                                "type":"object",
+                                "$ref":"#/components/schemas/Address"
+                            },
+                            "examples":{
+                                "user":{
+                                    "value":{
+                                        "cep": "88066-350",
+                                        "state": "SC",
+                                        "city": "Florianópolis",
+                                        "area": "Armação do Pântano do Sul",
+                                        "address_name": "Servidão Loduvina Pires",
+                                        "number": "123"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "201":{
+                        "description":"Created"
+                    },
+                    "400":{
+                        "description":"Bad Request"
+                    },
+                    "401":{
+                        "description":"Unauthorized"
+                    },
+                    "500":{
+                        "description":"Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/addresses/{addressId}":{
+            "put":{
+                "summary": "Edit address informations",
+                "tags":["Address"],
+                "security":[{ "bearerAuth":[] }],
+                "parameters":[{
+                    "name":"bookId",
+                    "in":"path",
+                    "description":"Book Id",
+                    "required":true,
+                    "type":"number"
+                }],
+                "requestBody":{
+                    "content":{
+                        "application/json":{
+                            "schema": {
+                                "type":"object",
+                                "$ref":"#/components/schemas/Address"
+                            },
+                            "examples":{
+                                "user":{
+                                    "value":{
+                                        "cep": "88066-350",
+                                        "state": "SC",
+                                        "city": "Florianópolis",
+                                        "area": "Armação do Pântano do Sul",
+                                        "address_name": "Servidão Loduvina Pires",
+                                        "number": "123"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200": {
+                        "description":"OK"
+                    },
+                    "400":{
+                        "description":"Bad Request"
+                    },
+                    "401":{
+                        "description":"Unauthorized"
+                    },
+                    "404":{
+                        "description":"Not Found"
+                    },
+                    "500":{
+                        "description":"Internal Server Error"
+                    }
+                }
+            },
+            "delete":{
+                "summary": "Delete a adress",
+                "tags":["Address"],
+                "security":[{ "bearerAuth":[] }],
+                "parameters":[{
+                    "name":"bookId",
+                    "in":"path",
+                    "description":"Book Id",
+                    "required":true,
+                    "type":"number"
+                }],
+                "responses":{
+                    "200": {
+                        "description":"OK"
+                    },
+                    "400":{
+                        "description":"Bad Request"
+                    },
+                    "401":{
+                        "description":"Unauthorized"
+                    },
+                    "404":{
+                        "description":"Not Found"
+                    },
+                    "500":{
+                        "description":"Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/login":{
+            "post":{
+                "summary":"Fazer Login",
+                "operationId":"login",
+                "tags":["Auth"],
+                "produces":[
+                    "application/json"
+                ],
+                "requestBody":{
+                    "content":{
+                        "application/json":{
+                            "schema": {
+                                "type":"object",
                                 "$ref":"#/components/schemas/Auth"
                             },
                             "examples":{
                                 "user":{
                                     "value":{
-                                        "email":"email@domain.com",
-                                        "password":"password01"
+                                        "email":"usuario@gmail.com",
+                                        "password":"12345678"
                                     }
                                 }
                             }
@@ -33,7 +163,19 @@
                 },
                 "responses":{
                     "200":{
-                        "description":"User Authenticated"
+                        "description":"User Authenticated",
+                        "schema": {
+                            "$ref":"#/components/schemas/Auth"
+                        }
+                    },
+                    "400":{
+                        "description":"Bad Request"
+                    },
+                    "404":{
+                        "description":"Not Found"
+                    },
+                    "500":{
+                        "description":"Internal Server Error"
                     }
                 }
 
@@ -49,26 +191,161 @@
                         },
                     "400":{
                         "description":"Bad Request"
+                    },
+                    "500":{
+                        "description":"Internal Server Error"
                     }
                 }
+            },
+            "post":{
+                "tags":["Book"],
+                "summary":"Cadastrar livro",
+                "security":[{ "bearerAuth":[] }],
+                "requestBody":{
+                    "content":{
+                        "application/json":{
+                            "schema": {
+                                "type":"object",
+                                "$ref":"#/components/schemas/Books"
+                            },
+                            "examples":{
+                                "user":{
+                                    "value":{
+                                        "title": "Meu grande livro.... Fábulas",
+                                        "description": "LIVRO INFANTIL: MEU GRANDE LIVRO... FABULAS. Editora Todolivro. Coleção Meu grande livro... Para crianças +3 anos. Capa dura, com pequenas avarias na lombada. Tamanho: 22 X 29 cm. Páginas: 29.",
+                                        "type_book": "donation",
+                                        "category_id": 13,
+                                        "price": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "201":{
+                        "description":"Created"
+                    },
+                    "400":{
+                        "description":"Bad Request"
+                    },
+                    "401":{
+                        "description":"Unauthorized"
+                    },
+                    "500":{
+                        "description":"Internal Server Error"
+                    }
+                }
+                
             }
         },
-        "/api/books/{bookId}":{
+        "/api/books/{bookId}": {
             "get":{
-                "parameters": {
-                    "in":"path",
-                    "name":"id",
-                    "description":"ID do livro",
-                    "required":"true",
-                    "type":"integer"
-                },
+                "summary":"Buscar pelo Id",
+                "description":"Buscar livro por ID",
+                "operationId":"findBookById",
                 "tags":["Book"],
-                "summary":"Visualizar livro pelo ID",
-                "operationId":"getBookById",
+                "parameters":[{
+                    "name":"bookId",
+                    "in":"path",
+                    "description":"Book Id",
+                    "required":true,
+                    "type":"number"
+                }],
                 "responses":{
                     "200": {
                         "description":"OK"
+                        },
+                    "400":{
+                        "description":"Bad Request"
+                    },
+                    "404":{
+                        "description":"Not Found"
+                    },
+                    "500":{
+                        "description":"Internal Server Error"
+                    }
+                }
+            },
+            "put":{
+                "summary":"Editar informações de livros",
+                "description":"Editar informações de livros",
+                "security":[{ "bearerAuth":[] }],
+                "operationId":"putBook",
+                "tags":["Book"],
+                "parameters":[{
+                    "name":"bookId",
+                    "in":"path",
+                    "description":"Book Id",
+                    "required":true,
+                    "type":"number"
+                }],
+                "requestBody":{
+                    "content":{
+                        "application/json":{
+                            "schema": {
+                                "type":"object",
+                                "$ref":"#/components/schemas/Books"
+                            },
+                            "examples":{
+                                "user":{
+                                    "description":"Envie apenas as informações que deseja editar",
+                                    "value":{
+                                        "title": "Meu grande livro.... Fábulas",
+                                        "description": "New description"
+                                    }
+                                }
+                            }
                         }
+                    }
+                },
+                "responses":{
+                    "200": {
+                        "description":"OK"
+                        },
+                    "400":{
+                        "description":"Bad Request"
+                    },
+                    "401":{
+                        "description":"Unauthorized"
+                    },
+                    "404":{
+                        "description":"Not Found"
+                    },
+                    "500":{
+                        "description":"Internal Server Error"
+                    }
+                }
+            },
+            "delete":{
+                "summary":"Deletar Livro",
+                "description":"Deletar Livro",
+                "security":[{ "bearerAuth":[] }],
+                "operationId":"deleteBook",
+                "tags":["Book"],
+                "parameters":[{
+                    "name":"bookId",
+                    "in":"path",
+                    "description":"Book Id",
+                    "required":true,
+                    "type":"number"
+                }],
+                "responses":{
+                    "200": {
+                        "description":"OK"
+                        },
+                    "400":{
+                        "description":"Bad Request"
+                    },
+                    "401":{
+                        "description":"Unauthorized"
+                    },
+                    "404":{
+                        "description":"Not Found"
+                    },
+                    "500":{
+                        "description":"Internal Server Error"
+                    }
                 }
             }
         },
@@ -86,46 +363,174 @@
                 "tags":["Categories"]
             }
         },
-        "/api/user": {
-            "post": {
-                "summary": "Cadastro de usuário",
+        "/api/categories/{categoryId}": {
+            "get":{
+                "summary":"Buscar pelo Id",
+                "description":"Buscar categoria por ID",
+                "operationId":"findCategoryById",
+                "tags":["Categories"],
+                "parameters":[{
+                    "name":"categoryId",
+                    "in":"path",
+                    "description":"Category Id",
+                    "required":true,
+                    "type":"number"
+                }],
                 "responses":{
-                    "201": {
-                        "description":"OK",
-                        "content":{
-                            "application/json":{
-                                "schema":{
-                                    "$ref":"#/components/schemas/User"
-                                }
-                            }
-                        }
+                    "200": {
+                        "description":"OK"
+                        },
+                    "400":{
+                        "description":"Bad Request"
                     },
-                    "400": {
-                        "description":"User Already Exists or Invalid User type"
+                    "404":{
+                        "description":"Not Found"
                     },
                     "500":{
                         "description":"Internal Server Error"
                     }
-                },
-                "description": "Rota responsável por realizar cadastros de usuários",
+                }
+            }
+        },
+        "/api/user":{
+            "get":{
                 "tags":["User"],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
+                "summary":"Visualizar usuários do sistema",
+                "responses":{
+                    "200":{
+                        "description":"OK"
+                    }
+                }
+            },
+            "post":{
+                "tags":["User"],
+                "summary":"Cadastrar usuários do sistema",
+                "requestBody":{
+                    "content":{
+                        "application/json":{
                             "schema": {
-                                "$ref": "#/components/schemas/User"
+                                "type":"object",
+                                "$ref":"#/components/schemas/User"
                             },
                             "examples":{
                                 "user":{
                                     "value":{
                                         "name":"Victor Anthony",
-                                        "email":"anthony@gmail.com",
-                                        "password":"abcd1234",
+                                        "email":"usuario@gmail.com",
+                                        "password":"12345678",
                                         "user_type":"common"
                                     }
                                 }
                             }
                         }
+                    }
+                },
+                "responses":{
+                    "201":{
+                        "description":"Registered User",
+                        "schema": {
+                            "$ref":"#/components/schemas/User"
+                        }
+                    },
+                    "400":{
+                        "description":"Bad Request"
+                    },
+                    "500":{
+                        "description":"Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/user/{userId}":{
+            "get":{
+                "tags":["User"],
+                "summary":"Visualizar usuário por Id",
+                "parameters":[{
+                    "name":"userId",
+                    "in":"path",
+                    "description":"User Id",
+                    "required":true,
+                    "type":"number"
+                }],
+                "responses":{
+                    "200":{
+                        "description":"OK"
+                    }
+                }
+            },
+            "put":{
+                "tags":["User"],
+                "summary":"Editar informações de usuário",
+                "security":[{ "bearerAuth":[] }],
+                "parameters":[{
+                    "name":"userId",
+                    "in":"path",
+                    "description":"User Id",
+                    "required":true,
+                    "type":"number"
+                }],
+                "requestBody":{
+                    "content":{
+                        "application/json":{
+                            "schema": {
+                                "type":"object",
+                                "$ref":"#/components/schemas/User"
+                            },
+                            "examples":{
+                                "user":{
+                                    "description":"Envie apenas as informações que deseja editar",
+                                    "value":{
+                                        "email": "newemail@domain.com"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200": {
+                        "description":"OK"
+                    },
+                    "400":{
+                        "description":"Bad Request"
+                    },
+                    "401":{
+                        "description":"Unauthorized"
+                    },
+                    "404":{
+                        "description":"Not Found"
+                    },
+                    "500":{
+                        "description":"Internal Server Error"
+                    }
+                }
+            },
+            "delete":{
+                "tags":["User"],
+                "summary":"Deletar usuário",
+                "security":[{ "bearerAuth":[] }],
+                "parameters":[{
+                    "name":"userId",
+                    "in":"path",
+                    "description":"User Id",
+                    "required":true,
+                    "type":"number"
+                }],
+                "responses":{
+                    "200": {
+                        "description":"OK"
+                    },
+                    "400":{
+                        "description":"Bad Request"
+                    },
+                    "401":{
+                        "description":"Unauthorized"
+                    },
+                    "404":{
+                        "description":"Not Found"
+                    },
+                    "500":{
+                        "description":"Internal Server Error"
                     }
                 }
             }
@@ -158,6 +563,52 @@
                     },
                     "password":{
                         "type":"string"
+                    }
+                }
+            },
+            "Books":{
+                "type":"object",
+                "properties":{
+                    "title":{
+                        "type":"string"
+                    },
+                    "description":{
+                        "type":"string"
+                    },
+                    "type_book":{
+                        "type":"string"
+                    },
+                    "category_id":{
+                        "type":"number"
+                    },
+                    "image":{
+                        "type":"upfile"
+                    },
+                    "price":{
+                        "type":"number"
+                    }
+                }
+            },
+            "Address":{
+                "type":"object",
+                "properties":{
+                    "cep":{
+                        "type":"string"
+                    },
+                    "state":{
+                        "type":"string"
+                    },
+                    "city":{
+                        "type":"string"
+                    },
+                    "area":{
+                        "type":"string"
+                    },
+                    "address_name":{
+                        "type":"string"
+                    },
+                    "number":{
+                        "type":"number"
                     }
                 }
             }
