@@ -1,0 +1,173 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title":"Obes API",
+        "description":"API criada para visualização e manipulação dos endpoints do sistema Obes - Sebo Online",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact":{
+            "email": "apiteam@swagger.io"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/login":{
+            "post":{
+                "summary":"Fazer Login",
+                "tags":["Auth"],
+                "requestBody":{
+                    "content":{
+                        "application/json":{
+                            "schema": {
+                                "$ref":"#/components/schemas/Auth"
+                            },
+                            "examples":{
+                                "user":{
+                                    "value":{
+                                        "email":"email@domain.com",
+                                        "password":"password01"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200":{
+                        "description":"User Authenticated"
+                    }
+                }
+
+            }
+        },
+        "/api/books":{
+            "get":{
+                "tags":["Book"],
+                "summary":"Visualizar livros",
+                "responses":{
+                    "200": {
+                        "description":"OK"
+                        },
+                    "400":{
+                        "description":"Bad Request"
+                    }
+                }
+            }
+        },
+        "/api/books/{bookId}":{
+            "get":{
+                "parameters": {
+                    "in":"path",
+                    "name":"id",
+                    "description":"ID do livro",
+                    "required":"true",
+                    "type":"integer"
+                },
+                "tags":["Book"],
+                "summary":"Visualizar livro pelo ID",
+                "operationId":"getBookById",
+                "responses":{
+                    "200": {
+                        "description":"OK"
+                        }
+                }
+            }
+        },
+        "/api/categories": {
+            "get":{
+                "summary":"Visualizar categorias",
+                "responses":{
+                    "200": {
+                        "description":"OK"
+                        },
+                    "400":{
+                        "description":"Bad Request"
+                    }
+                },
+                "tags":["Categories"]
+            }
+        },
+        "/api/user": {
+            "post": {
+                "summary": "Cadastro de usuário",
+                "responses":{
+                    "201": {
+                        "description":"OK",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "$ref":"#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description":"User Already Exists or Invalid User type"
+                    },
+                    "500":{
+                        "description":"Internal Server Error"
+                    }
+                },
+                "description": "Rota responsável por realizar cadastros de usuários",
+                "tags":["User"],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User"
+                            },
+                            "examples":{
+                                "user":{
+                                    "value":{
+                                        "name":"Victor Anthony",
+                                        "email":"anthony@gmail.com",
+                                        "password":"abcd1234",
+                                        "user_type":"common"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components":{
+        "schemas": {
+            "User":{
+                "type":"object",
+                "properties":{
+                    "name":{
+                        "type":"string"
+                    },
+                    "email":{
+                        "type":"string"
+                    },
+                    "password":{
+                        "type":"string"
+                    },
+                    "user_type":{
+                        "type":"string"
+                    }
+                }
+            },
+            "Auth":{
+                "type":"object",
+                "properties":{
+                    "email":{
+                        "type":"string"
+                    },
+                    "password":{
+                        "type":"string"
+                    }
+                }
+            }
+        },
+        "securitySchemes":{
+            "bearerAuth":{
+                "type":"http",
+                "scheme":"bearer",
+                "bearerFormat":"JWT"
+            }
+        }
+    }
+}
