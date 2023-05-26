@@ -9,6 +9,7 @@ const userRoute = require('./routes/usersRoutes');
 const loginRoutes = require('./routes/loginRoutes');
 const categoryRouter = require('./routes/categoriesRoutes');
 const addressRoutes = require('./routes/addressesRoutes');
+const donationOrdersRouter = require('./routes/donationOrdersRoutes');
 const apiRoute = '/api';
 
 const whitelist = [
@@ -29,7 +30,7 @@ const corsOptions = {
 // eslint-disable-next-line no-unused-vars
 const errorHandling = (err, request, response, next) => {
   if (err instanceof Error) {
-    return response.status(err.statusCode).json({
+    return response.status(err.statusCode || 500).json({
       message: err.message,
       errors: err.errors
     });
@@ -65,6 +66,7 @@ class App {
     this.app.use(apiRoute, loginRoutes);
     this.app.use(apiRoute, categoryRouter);
     this.app.use(apiRoute, addressRoutes);
+    this.app.use(apiRoute, donationOrdersRouter);
   }
 }
 
