@@ -182,6 +182,64 @@
             "get":{
                 "tags":["Book"],
                 "summary":"Get All Books",
+                "parameters": [
+                  {
+                    "in": "query",
+                    "name": "limit",
+                    "schema": {
+                      "type": "integer"
+                    },
+                    "description": "The numbers of books to return"
+                  },
+                  {
+                    "in": "query",
+                    "name": "offset",
+                    "schema": {
+                      "type": "integer"
+                    },
+                    "description": "The number of books to skip before starting to collect the result set"
+                  },
+                  {
+                    "in": "query",
+                    "name": "price_limit",
+                    "schema": {
+                      "type": "number"
+                    },
+                    "description": "The maximum price of books"
+                  },
+                  {
+                    "in": "query",
+                    "name": "title",
+                    "schema": {
+                      "type": "string"
+                    },
+                    "description": "The book's title"
+                  },
+                  {
+                    "in": "query",
+                    "name": "category_id",
+                    "schema": {
+                      "type": "integer"
+                    },
+                    "description": "the book category id"
+                  },
+                  {
+                    "in": "query",
+                    "name": "type_book",
+                    "schema": {
+                      "type": "string"
+                    },
+                    "description": "the type of book. Ex.: (donation or sale)"
+                  },
+                  {
+                    "in": "query",
+                    "name": "order_by",
+                    "schema": {
+                      "type": "form"
+                    },
+                    "description": "the column and sort order of the books. Ex.: title,ASC"
+                  }
+                ],
                 "responses":{
                     "200": {
                         "description":"OK"
@@ -233,7 +291,7 @@
                         "description":"Internal Server Error"
                     }
                 }
-                
+
             }
         },
         "/api/books/{bookId}": {
