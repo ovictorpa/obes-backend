@@ -31,6 +31,12 @@ class DonationOrdersService {
 
     return donationOrder;
   }
+
+  async getDonationOrdersByUserId(user_id) {
+    const donationOrders = await this.donationOrdersRepository.findByUserId(user_id);
+
+    return donationOrders;
+  }
 }
 
 module.exports =  DonationOrdersService;
