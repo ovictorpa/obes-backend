@@ -37,7 +37,7 @@ class UsersService {
     const user = await this.repository.findOne(field);
 
     if(!user) {
-      throw new BadRequest('User Not Found');
+      throw new NotFound('User Not Found');
     }
 
     return user;
@@ -54,11 +54,7 @@ class UsersService {
   }
 
   async update(data) {
-    const user = await this.repository.findById(data.id);
-
-    if (!user) {
-      throw new NotFound('User Not Found');
-    }
+    const user = await this.findById(data.id);
 
     user.set(data);
 
@@ -68,11 +64,7 @@ class UsersService {
   }
 
   async deleteById(id) {
-    const user = await this.repository.findById(id);
-
-    if (!user) {
-      throw new NotFound('User Not Found');
-    }
+    const user = await this.findById(id);
 
     await this.repository.destroy(user);
 
