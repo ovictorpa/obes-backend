@@ -42,6 +42,20 @@ class BooksRepository {
     }
   }
 
+  async findByUser(user_id) {
+    try {
+      const books = await Book.findAll({
+        where: {
+          user_id
+        }
+      });
+
+      return books;
+    } catch(e) {
+      throw new BadRequest(e.message, e.errors);
+    }
+  }
+
   async update(book) {
     try {
       const bookUpdated = await book.save();

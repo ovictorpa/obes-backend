@@ -5,6 +5,7 @@ const Unauthorized = require('./errors/Unauthorized');
 const Category = require('../models/Category');
 const TypeBook = require('../models/enums/TypeBook');
 const BadRequest = require('./errors/BadRequest');
+const UsersService = require('./UsersService');
 
 class BooksService {
   constructor() {
@@ -47,6 +48,16 @@ class BooksService {
     };
 
     const books = await this.booksRepository.findAll(options);
+
+    return books;
+  }
+
+  async findBooksFromUser(user_id) {
+    const usersService = new UsersService();
+
+    await usersService.findById(user_id);
+
+    const books = await this.booksRepository.findByUser(user_id);
 
     return books;
   }

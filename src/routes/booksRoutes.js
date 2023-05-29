@@ -8,6 +8,7 @@ const bookRouter = Router();
 
 const upload = multer(multerConfig);
 
+bookRouter.get('/:user_id/books', BooksController.getBooksFromUser);
 bookRouter.get('/books', BooksController.getAllBooks);
 bookRouter.get('/books/:id', BooksController.getBookById);
 bookRouter.post('/books', login, upload.single('image'), BooksController.addBook);

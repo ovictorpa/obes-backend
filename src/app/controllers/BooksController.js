@@ -63,6 +63,16 @@ class BooksController {
 
     return res.status(200).json({ message: 'Book Deleted Successfully!' });
   }
+
+  async getBooksFromUser(req, res) {
+    const { user_id } = req.params;
+
+    const service = new BooksService();
+
+    const books = await service.findBooksFromUser(user_id);
+
+    return res.status(200).json(books);
+  }
 }
 
 module.exports = new BooksController();
