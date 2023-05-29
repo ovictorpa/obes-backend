@@ -34,7 +34,16 @@ Address.init({
     type: DataTypes.STRING,
     allowNull: true,
   },
-}, { sequelize, tableName: 'addresses', modelName: 'address' });
+}, {
+  sequelize,
+  tableName: 'addresses',
+  modelName: 'address',
+  defaultScope: {
+    attributes: {
+      exclude: ['created_at', 'updated_at']
+    },
+  }
+});
 
 Address.belongsTo(User, {
   foreignKey: 'user_id'

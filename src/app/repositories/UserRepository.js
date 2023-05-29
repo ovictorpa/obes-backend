@@ -25,9 +25,6 @@ class UserRepository {
       include: [
         {
           model: Address,
-          attributes: {
-            exclude: ['created_at', 'updated_at', 'user_id']
-          }
         }
       ]
 

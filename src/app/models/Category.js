@@ -15,6 +15,15 @@ Category.init({
       }
     }
   },
-}, { sequelize, tableName: 'categories', modelName: 'category' });
+}, {
+  sequelize,
+  tableName: 'categories',
+  modelName: 'category',
+  defaultScope: {
+    attributes: {
+      exclude: ['created_at', 'updated_at']
+    },
+  }
+});
 
 module.exports = Category;

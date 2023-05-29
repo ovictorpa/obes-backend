@@ -41,7 +41,6 @@ class BooksService {
       order,
       offset,
       limit,
-      attributes: { exclude: ['created_at', 'updated_at'] },
       include: [
         { model: Category, attributes: ['name']}
       ]

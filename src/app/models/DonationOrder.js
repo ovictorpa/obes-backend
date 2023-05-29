@@ -20,7 +20,16 @@ DonationOrder.init({
     type: DataTypes.ENUM('PENDING', 'IN_PROGRESS', 'CONFIRMED', 'CANCELED'),
     defaultValue: 'PENDING'
   }
-}, { sequelize, tableName: 'donation_orders', modelName: 'donation' });
+}, {
+  sequelize,
+  tableName: 'donation_orders',
+  modelName: 'donation',
+  defaultScope: {
+    attributes: {
+      exclude: ['created_at', 'updated_at']
+    },
+  }
+});
 
 DonationOrder.belongsTo(User, {
   foreignKey: 'user_id'

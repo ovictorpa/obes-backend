@@ -43,7 +43,16 @@ Book.init({
       return `${process.env.URL}/uploads/images/${this.getDataValue('filename')}`;
     }
   }
-}, { sequelize, tableName: 'books', modelName: 'book' });
+}, {
+  sequelize,
+  tableName: 'books',
+  modelName: 'book',
+  defaultScope: {
+    attributes: {
+      exclude: ['created_at', 'updated_at']
+    },
+  }
+});
 
 Book.belongsTo(User, {
   foreignKey: 'user_id'

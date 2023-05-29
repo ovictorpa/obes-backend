@@ -4,11 +4,7 @@ const BadRequest = require('../services/errors/BadRequest');
 class CategoriesRepository {
   async findAll() {
     try {
-      const categories = await Category.findAll({
-        attributes: {
-          exclude: ['created_at', 'updated_at']
-        }
-      });
+      const categories = await Category.findAll();
 
       return categories;
     } catch (e) {

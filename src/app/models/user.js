@@ -84,7 +84,12 @@ User.init({
 }, {
   sequelize,
   modelName: 'user',
-  tableName: 'users'
+  tableName: 'users',
+  defaultScope: {
+    attributes: {
+      exclude: ['created_at', 'updated_at']
+    },
+  }
 });
 
 User.addHook('beforeSave', async (user) => {
