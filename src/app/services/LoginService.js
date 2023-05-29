@@ -17,7 +17,7 @@ class LoginService {
     }
 
     const { id } = user;
-    const token = jwt.sign({ id, email }, process.env.TOKEN_SECRET, {
+    const token = jwt.sign({ id, email,  type_user: user.user_type }, process.env.TOKEN_SECRET, {
       expiresIn: process.env.TOKEN_EXPIRATION,
     });
 
@@ -27,7 +27,7 @@ class LoginService {
         name: user.name,
         id,
         email,
-        type_user: user.type_user
+        user_type: user.user_type
       }
     };
   }
