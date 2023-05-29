@@ -1,16 +1,9 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
-const UserRepository = require('../repositories/UserRepository');
 const UsersService = require('./UsersService');
-const BadRequest = require('./errors/BadRequest');
 const Unauthorized = require('./errors/Unauthorized');
 
 class LoginService {
-  constructor() {
-    this.userRepository = new UserRepository();
-  }
-
-
   async login(email, password) {
     if (!email || !password) {
       throw new Unauthorized('Invalid Credentials');
@@ -18,10 +11,6 @@ class LoginService {
 
     const userService = new UsersService();
     const user = await userService.findBy({ email });
-
-    if (!user) {
-      throw new BadRequest('User Not Found');
-    }
 
     if (!(await user.passwordIsValid(password))) {
       throw new Unauthorized('Invalid Credentials');
