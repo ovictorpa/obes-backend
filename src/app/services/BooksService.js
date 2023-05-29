@@ -84,11 +84,7 @@ class BooksService {
   async updateBook(data) {
     const { id } = data;
 
-    const book = await this.booksRepository.findById(id);
-
-    if (!book) {
-      throw new NotFound('Book Not Found');
-    }
+    const book = await this.findById(id);
 
     if(data.user_id !== book.user_id) {
       throw new Unauthorized('Unauthorized User');
@@ -102,11 +98,7 @@ class BooksService {
   }
 
   async deleteBookById(id, user_id) {
-    const book = await this.booksRepository.findById(id);
-
-    if (!book) {
-      throw new NotFound('Book Not Found');
-    }
+    const book = await this.findById(id);
 
     if(user_id !== book.user_id) {
       throw new Unauthorized('Unauthorized User');
