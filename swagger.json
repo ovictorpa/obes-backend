@@ -385,6 +385,57 @@
                 }
             }
         },
+        "/api/donation-orders": {
+            "get":{
+                "summary":"Get donation orders",
+                "security":[{ "bearerAuth":[] }],
+                "responses":{
+                    "200": {
+                        "description":"OK"
+                        },
+                    "400":{
+                        "description":"Bad Request"
+                    }
+                },
+                "tags":["Donation Orders"]
+            }
+        },
+        "/api/donation-orders/{bookId}":{
+            "post":{
+                "summary":"Post a donation order",
+                "security":[{ "bearerAuth":[] }],
+                "operationId":"postDonationOrder",
+                "tags":["Donation Orders"],
+                "parameters":[{
+                    "name":"bookId",
+                    "in":"path",
+                    "description":"Book Id",
+                    "required":true,
+                    "type":"number"
+                }, 
+                {
+                    "name":"userId",
+                    "description":"User Id",
+                    "in":"header",
+                    "required":true,
+                    "type":"number"
+                }],
+                "responses":{
+                    "200": {
+                        "description":"Created"
+                        },
+                    "400":{
+                        "description":"Bad Request"
+                    },
+                    "404":{
+                        "description":"Not Found"
+                    },
+                    "500":{
+                        "description":"Internal Server Error"
+                    }
+                }
+            }
+        },
         "/api/user":{
             "get":{
                 "tags":["User"],
