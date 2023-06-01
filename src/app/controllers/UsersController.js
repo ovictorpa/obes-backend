@@ -14,7 +14,17 @@ class UsersController {
   }
 
   async createUser(request, response) {
-    const { name, email, password, phone_number, user_type, cpf, birthday, institution_type } = request.body;
+    const {
+      name,
+      email,
+      password,
+      phone_number,
+      user_type,
+      cpf,
+      birthday,
+      institution_type,
+      about_me
+    } = request.body;
 
     const service = new UsersService();
 
@@ -27,7 +37,8 @@ class UsersController {
         user_type,
         cpf,
         birthday,
-        institution_type
+        institution_type,
+        about_me
       }
     );
 

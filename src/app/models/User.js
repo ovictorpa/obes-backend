@@ -20,6 +20,10 @@ User.init({
       }
     }
   },
+  about_me: {
+    type: DataTypes.STRING,
+    defaultValue: ''
+  },
   email: {
     type: DataTypes.STRING,
     defaultValue: '',

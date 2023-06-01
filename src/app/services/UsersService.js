@@ -8,7 +8,7 @@ class UsersService {
     this.repository = new UserRepository();
   }
 
-  async createUser({ name, email, password, phone_number, user_type, cpf, birthday, institution_type }) {
+  async createUser({ name, email, password, phone_number, user_type, cpf, birthday, institution_type, about_me }) {
     if (user_type !== UserType.Common && user_type !== UserType.Institutional) {
       throw new BadRequest('Invalid User type');
     }
@@ -27,7 +27,8 @@ class UsersService {
       user_type,
       cpf,
       birthday,
-      institution_type
+      institution_type,
+      about_me
     });
 
     return user;
