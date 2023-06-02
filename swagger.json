@@ -182,6 +182,50 @@
             "get":{
                 "tags":["Book"],
                 "summary":"Get All Books",
+                "parameters": [
+                  {
+                    "name": "title",
+                    "in": "query",
+                    "description": "The title of the book",
+                    "type": "string"
+                  },
+                  {
+                    "name": "price_limit",
+                    "in": "query",
+                    "description": "The price limit of the books that Will be returned",
+                    "type": "number"
+                  },
+                  {
+                    "name": "limit",
+                    "in": "query",
+                    "description": "The numbers of items to return",
+                    "type": "integer"
+                  },
+                  {
+                    "name": "offset",
+                    "in": "query",
+                    "description": "The number of items to skip before starting to collect the result set",
+                    "type": "integer"
+                  },
+                  {
+                    "name": "category_id",
+                    "in": "query",
+                    "description": "The book category ID",
+                    "type": "integer"
+                  },
+                  {
+                    "name": "type_book",
+                    "in": "query",
+                    "description": "The type of book. Example: donation or sale",
+                    "type": "string"
+                  },
+                  {
+                    "name": "order_by",
+                    "in": "query",
+                    "description": "The field and the sorting type of the field. Example: title,asc",
+                    "type": "string"
+                  }
+                ],
                 "responses":{
                     "200": {
                         "description":"OK"
@@ -233,7 +277,7 @@
                         "description":"Internal Server Error"
                     }
                 }
-                
+
             }
         },
         "/api/books/{bookId}": {
@@ -412,7 +456,7 @@
                     "description":"Book Id",
                     "required":true,
                     "type":"number"
-                }, 
+                },
                 {
                     "name":"userId",
                     "description":"User Id",
