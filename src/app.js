@@ -57,8 +57,8 @@ class App {
     this.app.use(helmet({
       crossOriginResourcePolicy: false,
     }));
-    this.app.use(express.json({ limit: '10mb' }));
     this.app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+    this.app.use(express.json({ limit: '10mb' }));
     this.app.use('/uploads', express.static(path.resolve(__dirname, '..', 'uploads')));
   }
 
