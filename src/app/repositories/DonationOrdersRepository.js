@@ -1,6 +1,7 @@
 const { Op } = require('sequelize');
 const DonationOrder = require('../models/DonationOrder');
 const BadRequest = require('../services/errors/BadRequest');
+const Book = require('../models/Book');
 
 class DonationOrdersRepository {
   async create({ book_id, user_id }) {
@@ -24,7 +25,13 @@ class DonationOrdersRepository {
           user_id: {
             [Op.eq]: user_id
           }
-        }
+        },
+        include: [
+          {
+            model: Book,
+          }
+        ]
+
       });
 
       return donationOrders;
