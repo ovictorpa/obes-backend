@@ -1,87 +1,78 @@
-const pool = require('../../database')
-const query = require('../query/books-query')
+const BooksService = require('../services/BooksService');
 
 class BooksController {
 
-    getAllBooks(req, res) {
-        pool.query(query.getBooks, (error, results) => {
-            if (error) throw error
-            res.status(200).json(results.rows);
-        })
-    }
-    getBookById(req, res) {
-        const id = parseInt(req.params.id);
-        pool.query(query.getBookById, [id], (error, results) => {
-            const invalidId = !results.rows.length;
-            if(invalidId) {
-                res.send("Invalid Id")
-            }
-        })
-        pool.query(query.getBookById, [id], (error, results) => {
-            if (error) throw error;
-            res.status(200).json(results.rows);
-        })
-    }
-    addBook(req, res) {
-        const { title, description, image_url,  preco} = req.body;
+  async getAllBooks(req, res) {
+    const booksService = new BooksService();
 
-        if(preco == null){
-            pool.query(query.createBook, [title, description, image_url], (error, results) => {
-                if (error) throw error;
-                res.status(201).send("Book Created Successfully!");          
-            })
-        }
-        else {
-            pool.query(query.createBookForSale, [title, description, image_url, preco], (error, results) =>{
-                if (error) throw error;
-                res.status(201).send("Book Created Successfully!");
-            })
-        }
-    }
-    updateBook(req, res) {
-        const id = parseInt(req.params.id);
-        const {title, description, image_url, preco} = req.body;
-        pool.query(query.getBookById, [id], (error, results) => {
-            const invalidId = !results.rows.length;
-            if(invalidId) {
-                res.send("Invalid Id")
-            }
-        })
-        if(title){
-            pool.query(query.updateBookTitle, [title, id], (error, results) => {
-            })
-        }
-        if(description){
-            pool.query(query.updateBookDescription, [description, id], (error, results) => {
-                if(error) throw error;
-            })
-        }
-        if(image_url){
-            pool.query(query.updateBookImage, [image_url, id], (error, results) => {
-                if(error) throw error;
-            })
-        }
-        if(preco){
-            pool.query(query.updateBookPrice, [preco, id], (error, results) => {
-                if(error) throw error;
-            })
-        }
-        if(title || description || image_url || preco)
-            res.status(200).send("Informations Updated Successfully")
-    }
-    deleteBook(req, res) {
-        const id = parseInt(req.params.id);
-        pool.query(query.deleteBook, [id], (error, results) => {
-            const invalidId = !results.rows.length;
-            if(invalidId) {
-                res.send("Invalid Id")
-            }
-        })
-        pool.query(query.deleteBook, [id], (error, results) => {
-            if (error) throw error;
-            res.status(200).send("Book Deleted Successfully!");
-        })
-    }
+    const { limit, offset, price_limit, title, order_by, category_id, type_book } = req.query;
+
+    const books = await booksService.getAllBooks(
+      limit,
+      offset,
+      price_limit,
+      title,
+      order_by,
+      category_id,
+      type_book
+    );
+
+    return res.status(200).json(books);
+  }
+
+  async getBookById(req, res) {
+    const { id } = req.params;
+
+    const booksService = new BooksService();
+
+    const book = await booksService.findById(id);
+
+    return res.status(200).json(book);
+  }
+
+  async addBook(req, res) {
+    const filename = req.file?.filename;
+    const { id } = req.user;
+    const booksService = new BooksService();
+    const book = await booksService.createBook({ ...req.body, filename, user_id: id });
+
+    return res.status(201).json(book);
+  }
+
+  async updateBook(req, res) {
+    const { id } = req.params;
+    const { id: user_id } = req.user;
+
+    const booksService = new BooksService();
+
+    const bookUpdated = await booksService.updateBook({ id, user_id, ...req.body });
+
+    return res.status(200).json({
+      message: 'Informations Updated Successfully',
+      book: bookUpdated
+    });
+  }
+
+  async deleteBook(req, res) {
+    const { id } = req.params;
+    const { id: user_id } = req.user;
+
+    const service = new BooksService();
+
+    await service.deleteBookById(id, user_id);
+
+    return res.status(200).json({ message: 'Book Deleted Successfully!' });
+  }
+
+  async getBooksFromUser(req, res) {
+    const { user_id } = req.params;
+
+    const service = new BooksService();
+
+    const books = await service.findBooksFromUser(user_id);
+
+    return res.status(200).json(books);
+  }
 }
 
 module.exports = new BooksController();
