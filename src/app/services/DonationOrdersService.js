@@ -16,10 +16,6 @@ class DonationOrdersService {
 
     const user = await usersService.findById(user_id);
 
-    if(user.user_type !== UserType.Institutional) {
-      throw new BadRequest('User Is Not Institutional Type');
-    }
-
     const book = await this.booksRepository.findById(book_id);
 
     if (!book) {
